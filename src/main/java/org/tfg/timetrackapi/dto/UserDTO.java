@@ -1,51 +1,20 @@
-package org.tfg.timetrackapi.entity;
+package org.tfg.timetrackapi.dto;
 
+public class UserDTO {
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
-@Entity
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank
-    @Size(min = 3)
     private String name;
-    @NotBlank
-    @Size(min = 3)
     private String lastName;
-
-    @NotBlank
-    @Size(min = 3)
     private String secondLastName;
-
     private int accessLevel;
 
-
-    public User() {
+    public UserDTO() {
     }
 
-    public User(Long id, String name, String lastName, String secondLastName, int accessLevel) {
-        this.id = id;
+    public UserDTO(String name, String lastName, String secondLastName, int accessLevel) {
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
         this.accessLevel = accessLevel;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

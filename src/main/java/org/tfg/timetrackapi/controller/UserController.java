@@ -3,9 +3,8 @@ package org.tfg.timetrackapi.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.UserService;
 
@@ -20,16 +19,10 @@ public class UserController {
     }
 
 
-    @GetMapping()
-    public ResponseEntity<User> save(){
-        User user = new User();
-        user.setName("Juan");
-        user.setLastName("Mendez");
-        user.setSecondLastName("Navarro");
-        user.setAccessLevel(2);
+    @PostMapping("/save")
+    public ResponseEntity<User> save(@RequestBody UserDTO userDTO){
 
-        User userSaved = userService.save(user);
-
+        User userSaved = userService.save(userDTO);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
