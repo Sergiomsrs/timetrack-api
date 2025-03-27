@@ -1,4 +1,4 @@
-package org.tfg.timetrackapi.model;
+package org.tfg.timetrackapi.entity;
 
 
 import jakarta.persistence.Entity;

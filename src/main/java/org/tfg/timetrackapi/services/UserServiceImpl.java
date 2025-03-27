@@ -1,7 +1,7 @@
 package org.tfg.timetrackapi.services;
 
 import org.springframework.stereotype.Service;
-import org.tfg.timetrackapi.model.User;
+import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.repository.UserRepository;
 
 

@@ -1,6 +1,6 @@
 package org.tfg.timetrackapi.services;
 
-import org.tfg.timetrackapi.model.User;
+import org.tfg.timetrackapi.entity.User;
 
 public interface UserService {
 
