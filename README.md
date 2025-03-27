@@ -4,7 +4,7 @@
 
 Este proyecto es parte del Trabajo de Fin de Grado (TFG) del ciclo formativo de Desarrollo de Aplicaciones Multiplataforma (DAM). El objetivo de la aplicación web es proporcionar una solución para el control horario de los trabajadores de una empresa.
 
-La aplicación permite a los trabajadores fichar sus horas de entrada y salida, y a los administradores gestionar los fichajes de todos los empleados, generar reportes e imprimir registros de tiempo.
+La aplicación permitira a los trabajadores fichar sus horas de entrada y salida, y a los administradores gestionar los fichajes de todos los empleados, generar reportes e imprimir registros de tiempo.
 
 ## Tecnologías
 
