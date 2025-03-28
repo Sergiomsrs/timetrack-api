@@ -19,17 +19,32 @@ public class UserController {
     }
 
 
-    @PostMapping("/save")
-    public ResponseEntity<User> save(@RequestBody UserDTO userDTO){
+    @PostMapping("/users")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
 
-        User userSaved = userService.save(userDTO);
+        UserDTO userSaved = userService.save(userDTO);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userSaved);
     }
 
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.update(id, userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
 
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getById(id);
+        return ResponseEntity.ok(user);
+    }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        userService.delete(id);
+        return ResponseEntity.ok("Usuario con el id " + id +  " eliminado con exito");
+    }
 
 }

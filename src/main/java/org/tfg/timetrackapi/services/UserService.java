@@ -5,7 +5,13 @@ import org.tfg.timetrackapi.entity.User;
 
 public interface UserService {
 
-    User save (UserDTO userDTO);
+    UserDTO save (UserDTO userDTO);
+
+    UserDTO update (Long id, UserDTO userDTO);
+
+    User getById(Long id);
+
+    void delete(Long id);
 
 
 }
