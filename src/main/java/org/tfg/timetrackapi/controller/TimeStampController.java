@@ -9,6 +9,8 @@ import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.TimeStampService;
 import org.tfg.timetrackapi.services.UserService;
 
+
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/apis/timestamp")
 public class TimeStampController {

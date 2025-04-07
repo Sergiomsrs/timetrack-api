@@ -5,6 +5,8 @@ import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.repository.UserRepository;
 
+import java.util.List;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -92,5 +94,10 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public List<User> findAll() {
+       return userRepository.findAll();
     }
 }

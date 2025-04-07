@@ -8,6 +8,9 @@ import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.UserService;
 
+import java.util.List;
+
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -45,6 +48,11 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         userService.delete(id);
         return ResponseEntity.ok("Usuario con el id " + id +  " eliminado con exito");
+    }
+
+    @GetMapping("findall")
+    public List<User> findAll(){
+        return userService.findAll();
     }
 
 }
