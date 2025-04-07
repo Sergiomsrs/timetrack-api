@@ -2,10 +2,8 @@ package org.tfg.timetrackapi.controller;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.tfg.timetrackapi.dto.FichajeRequest;
 import org.tfg.timetrackapi.entity.TimeStamp;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.TimeStampService;
@@ -31,5 +29,18 @@ public class TimeStampController {
         TimeStamp timeStamp = timeStampService.addTimeStamp(employee);
         return ResponseEntity.ok(timeStamp);
 
+    }
+
+
+    @PostMapping("/fichar")
+    public ResponseEntity<TimeStamp> fichar(@RequestBody FichajeRequest request) {
+        // Autenticar al usuario con DNI y PIN
+        User employee = userService.authenticateUser(request.getDni(), request.getPassword());
+
+        // Guardar el fichaje
+        TimeStamp timeEntry = timeStampService.addTimeStamp(employee);
+
+        // Retornar el fichaje en la respuesta
+        return ResponseEntity.ok(timeEntry);
     }
 }

@@ -23,6 +23,8 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDTO.getLastName());
         user.setSecondLastName(userDTO.getSecondLastName());
         user.setAccessLevel(userDTO.getAccessLevel());
+        user.setDni(userDTO.getDni());
+        user.setPassword(userDTO.getPassword());
 
         User savedUser = userRepository.save(user);
 
@@ -30,7 +32,9 @@ public class UserServiceImpl implements UserService {
                 savedUser.getName(),
                 savedUser.getLastName(),
                 savedUser.getSecondLastName(),
-                savedUser.getAccessLevel()
+                savedUser.getAccessLevel(),
+                savedUser.getDni(),
+                savedUser.getPassword()
         );
     }
 
@@ -45,6 +49,8 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setLastName(userDTO.getLastName());
         userToUpdate.setSecondLastName(userDTO.getSecondLastName());
         userToUpdate.setAccessLevel(userDTO.getAccessLevel());
+        userToUpdate.setDni(userDTO.getDni());
+        userToUpdate.setPassword(userDTO.getPassword());
 
         User updatedUser = userRepository.save(userToUpdate);
 
@@ -52,7 +58,9 @@ public class UserServiceImpl implements UserService {
                 updatedUser.getName(),
                 updatedUser.getLastName(),
                 updatedUser.getSecondLastName(),
-                updatedUser.getAccessLevel()
+                updatedUser.getAccessLevel(),
+                updatedUser.getDni(),
+                updatedUser.getPassword()
         );
     }
 
@@ -71,5 +79,18 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User authenticateUser(String dni, String password) {
+        User user = userRepository.findByDni(dni)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con DNI: " + dni));
+
+        // Verificar si el PIN es correcto
+        if (!user.getPassword().equals(password)) {
+            throw new RuntimeException("PIN incorrecto para el DNI: " + dni);
+        }
+
+        return user;
     }
 }

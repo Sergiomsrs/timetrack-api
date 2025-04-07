@@ -28,16 +28,24 @@ public class User {
 
     private int accessLevel;
 
+    @NotBlank
+    private String dni;
+
+    @NotBlank
+    private String password;
+
 
     public User() {
     }
 
-    public User(Long id, String name, String lastName, String secondLastName, int accessLevel) {
+    public User(Long id, String name, String lastName, String secondLastName, int accessLevel, String dni, String password) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
         this.accessLevel = accessLevel;
+        this.dni = dni;
+        this.password = password;
     }
 
     public Long getId() {
@@ -78,5 +86,21 @@ public class User {
 
     public void setAccessLevel(int accessLevel) {
         this.accessLevel = accessLevel;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -7,14 +7,19 @@ public class UserDTO {
     private String secondLastName;
     private int accessLevel;
 
+    private String dni;
+    private String password;
+
     public UserDTO() {
     }
 
-    public UserDTO(String name, String lastName, String secondLastName, int accessLevel) {
+    public UserDTO(String name, String lastName, String secondLastName, int accessLevel, String dni, String password) {
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
         this.accessLevel = accessLevel;
+        this.dni = dni;
+        this.password = password;
     }
 
     public String getName() {
@@ -47,5 +52,21 @@ public class UserDTO {
 
     public void setAccessLevel(int accessLevel) {
         this.accessLevel = accessLevel;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
