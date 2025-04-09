@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
         user.setAccessLevel(userDTO.getAccessLevel());
         user.setDni(userDTO.getDni());
         user.setPassword(userDTO.getPassword());
+        user.setEmail(userDTO.getEmail());
 
         User savedUser = userRepository.save(user);
 
@@ -36,7 +37,8 @@ public class UserServiceImpl implements UserService {
                 savedUser.getSecondLastName(),
                 savedUser.getAccessLevel(),
                 savedUser.getDni(),
-                savedUser.getPassword()
+                savedUser.getPassword(),
+                savedUser.getEmail()
         );
     }
 
@@ -53,6 +55,7 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setAccessLevel(userDTO.getAccessLevel());
         userToUpdate.setDni(userDTO.getDni());
         userToUpdate.setPassword(userDTO.getPassword());
+        userToUpdate.setEmail(userDTO.getEmail());
 
         User updatedUser = userRepository.save(userToUpdate);
 
@@ -62,7 +65,8 @@ public class UserServiceImpl implements UserService {
                 updatedUser.getSecondLastName(),
                 updatedUser.getAccessLevel(),
                 updatedUser.getDni(),
-                updatedUser.getPassword()
+                updatedUser.getPassword(),
+                updatedUser.getEmail()
         );
     }
 

@@ -10,16 +10,19 @@ public class UserDTO {
     private String dni;
     private String password;
 
+    private String email;
+
     public UserDTO() {
     }
 
-    public UserDTO(String name, String lastName, String secondLastName, int accessLevel, String dni, String password) {
+    public UserDTO(String name, String lastName, String secondLastName, int accessLevel, String dni, String password, String email) {
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
         this.accessLevel = accessLevel;
         this.dni = dni;
         this.password = password;
+        this.email = email;
     }
 
     public String getName() {
@@ -68,5 +71,13 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

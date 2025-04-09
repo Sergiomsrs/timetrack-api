@@ -4,10 +4,13 @@ package org.tfg.timetrackapi.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.FichajeRequest;
+import org.tfg.timetrackapi.dto.TimeStampDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.TimeStampService;
 import org.tfg.timetrackapi.services.UserService;
+
+import java.util.List;
 
 
 @CrossOrigin("*")
@@ -44,5 +47,10 @@ public class TimeStampController {
 
         // Retornar el fichaje en la respuesta
         return ResponseEntity.ok(timeEntry);
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public List<TimeStampDTO> getTimeStampsByEmployeeId(@PathVariable Long employeeId) {
+        return timeStampService.getTimeStampsByEmployeeId(employeeId);
     }
 }
