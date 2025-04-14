@@ -2,6 +2,7 @@ package org.tfg.timetrackapi.services;
 
 import org.springframework.stereotype.Service;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
+import org.tfg.timetrackapi.dto.TimeStampDataDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.repository.TimeStampRepository;
@@ -28,6 +29,18 @@ public class TimeStampServiceImpl implements TimeStampService{
         timeStamp.setTimestamp(LocalDateTime.now());
         timeStamp.setEmployee(user);
         return timeStampRepository.save(timeStamp);
+    }
+
+    @Override
+    public void addTimeStampWithData(Long id, LocalDateTime newTimestamp) {
+
+        TimeStamp timeStampDataDTO = timeStampRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Registro no encontrado con ID: " + id));
+
+            timeStampDataDTO.setTimestamp(newTimestamp);
+            timeStampRepository.save(timeStampDataDTO);
+
+
     }
 
     public List<TimeStampDTO> getTimeStampsByEmployeeId(Long employeeId) {

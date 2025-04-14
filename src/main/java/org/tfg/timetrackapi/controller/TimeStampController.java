@@ -1,10 +1,12 @@
 package org.tfg.timetrackapi.controller;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.FichajeRequest;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
+import org.tfg.timetrackapi.dto.TimeStampDataDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.TimeStampService;
@@ -52,5 +54,15 @@ public class TimeStampController {
     @GetMapping("/employee/{employeeId}")
     public List<TimeStampDTO> getTimeStampsByEmployeeId(@PathVariable Long employeeId) {
         return timeStampService.getTimeStampsByEmployeeId(employeeId);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateTimestamp(@PathVariable Long id, @RequestBody TimeStampDataDTO dto) {
+        try {
+            timeStampService.addTimeStampWithData(id, dto.getTimestamp());
+            return ResponseEntity.ok("Timestamp actualizado correctamente");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
