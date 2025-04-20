@@ -17,7 +17,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/apis/timestamp")
+@RequestMapping("/api/timestamp")
 public class TimeStampController {
 
     private final TimeStampService timeStampService;

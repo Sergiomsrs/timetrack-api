@@ -1,6 +1,9 @@
 package org.tfg.timetrackapi.controller;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +15,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -21,8 +24,8 @@ public class UserController {
         this.userService = userService;
     }
 
-
-    @PostMapping("/users")
+// Create
+    @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
 
         UserDTO userSaved = userService.save(userDTO);
@@ -32,27 +35,55 @@ public class UserController {
                 .body(userSaved);
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        UserDTO updatedUser = userService.update(id, userDTO);
-        return ResponseEntity.ok(updatedUser);
+    // Read
+
+    @GetMapping
+    public List<User> findAll(){
+        return userService.findAll();
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getById(id);
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/users/{id}")
+
+    // Update
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+        UserDTO updatedUser = userService.update(id, userDTO);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    // Delete
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         userService.delete(id);
         return ResponseEntity.ok("Usuario con el id " + id +  " eliminado con exito");
     }
 
-    @GetMapping("findall")
-    public List<User> findAll(){
-        return userService.findAll();
+    @GetMapping("/pag")
+    public Page<User> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return userService.getUsers(pageable);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<User>> searchUsers(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> users = userService.searchUsersByName(name, pageable);
+        return ResponseEntity.ok(users);
+    }
+
 
 }

@@ -1,5 +1,7 @@
 package org.tfg.timetrackapi.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
@@ -103,5 +105,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
        return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<User> searchUsersByName(String name, Pageable pageable) {
+        return userRepository.findByNameContainingIgnoreCase(name, pageable);
     }
 }

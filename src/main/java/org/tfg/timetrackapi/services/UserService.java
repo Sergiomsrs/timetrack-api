@@ -1,5 +1,7 @@
 package org.tfg.timetrackapi.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
 
@@ -18,6 +20,9 @@ public interface UserService {
     User authenticateUser (String dni, String password);
 
     List<User> findAll();
+
+    Page<User> getUsers(Pageable pageable);
+    Page<User> searchUsersByName(String name, Pageable pageable);
 
 
 }
