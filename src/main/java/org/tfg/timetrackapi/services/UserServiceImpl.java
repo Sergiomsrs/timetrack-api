@@ -116,4 +116,8 @@ public class UserServiceImpl implements UserService {
     public Page<User> searchUsersByName(String name, Pageable pageable) {
         return userRepository.findByNameContainingIgnoreCase(name, pageable);
     }
+
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
 }

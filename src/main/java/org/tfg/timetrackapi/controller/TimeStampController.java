@@ -1,8 +1,7 @@
 package org.tfg.timetrackapi.controller;
 
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.FichajeRequest;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
@@ -12,6 +11,7 @@ import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.TimeStampService;
 import org.tfg.timetrackapi.services.UserService;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 
@@ -65,4 +65,5 @@ public class TimeStampController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
 }

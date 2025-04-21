@@ -21,6 +21,8 @@ public interface UserService {
 
     List<User> findAll();
 
+    public boolean existsById(Long id);
+
     Page<User> getUsers(Pageable pageable);
     Page<User> searchUsersByName(String name, Pageable pageable);
 
