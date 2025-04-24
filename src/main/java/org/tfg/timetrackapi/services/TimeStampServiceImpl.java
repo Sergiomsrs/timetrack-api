@@ -1,6 +1,8 @@
 package org.tfg.timetrackapi.services;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
 import org.tfg.timetrackapi.dto.TimeStampDataDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
@@ -31,16 +33,28 @@ public class TimeStampServiceImpl implements TimeStampService{
         return timeStampRepository.save(timeStamp);
     }
 
+
     @Override
-    public void addTimeStampWithData(Long id, LocalDateTime newTimestamp) {
+    public void addTimeStampWithData(Long employeeId, LocalDateTime newTimestamp) {
+        User user = userRepository.findById(employeeId)
+                .orElseThrow(() -> new RuntimeException("Empleado no encontrado con ID: " + employeeId));
 
-        TimeStamp timeStampDataDTO = timeStampRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Registro no encontrado con ID: " + id));
+        TimeStamp newTimeStamp = new TimeStamp();
+        newTimeStamp.setEmployee(user);
+        newTimeStamp.setTimestamp(newTimestamp);
 
-            timeStampDataDTO.setTimestamp(newTimestamp);
-            timeStampRepository.save(timeStampDataDTO);
+        timeStampRepository.save(newTimeStamp);
+    }
 
+    @Override
+    public void editTimeStampWithData(Long timeStId, LocalDateTime newTimestamp) {
+        TimeStamp timeStamp = timeStampRepository.findById(timeStId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "No se encontró el fichaje con ID: " + timeStId
+                ));
 
+        timeStamp.setTimestamp(newTimestamp);
+        timeStampRepository.save(timeStamp);
     }
 
     public List<TimeStampDTO> getTimeStampsByEmployeeId(Long employeeId) {
@@ -52,5 +66,10 @@ public class TimeStampServiceImpl implements TimeStampService{
                         timeStamp.getEmployee().getId()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteRecord(Long id) {
+        timeStampRepository.deleteById(id);
     }
 }

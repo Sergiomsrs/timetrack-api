@@ -6,13 +6,19 @@ import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.FichajeRequest;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
 import org.tfg.timetrackapi.dto.TimeStampDataDTO;
+import org.tfg.timetrackapi.dto.TimeStampRequestDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.TimeStampService;
 import org.tfg.timetrackapi.services.UserService;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin("*")
@@ -56,14 +62,59 @@ public class TimeStampController {
         return timeStampService.getTimeStampsByEmployeeId(employeeId);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> updateTimestamp(@PathVariable Long id, @RequestBody TimeStampDataDTO dto) {
+    @PatchMapping("/{timeTsId}")
+    public ResponseEntity<Map<String, Object>> updateTimestamp(
+            @PathVariable Long timeTsId,
+            @RequestBody TimeStampRequestDTO request) {
+
         try {
-            timeStampService.addTimeStampWithData(id, dto.getTimestamp());
-            return ResponseEntity.ok("Timestamp actualizado correctamente");
+            LocalDateTime newTimestamp = LocalDateTime.parse(request.getTimestamp());
+
+            timeStampService.editTimeStampWithData(timeTsId, newTimestamp);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Fichaje actualizado correctamente.");
+            response.put("id", timeTsId);
+            return ResponseEntity.ok(response);
+
+        } catch (DateTimeParseException e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", "Formato de fecha inválido: " + e.getParsedString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
+    }
+
+    @PostMapping("/timestamp")
+    public ResponseEntity<Map<String, String>> createTimeStamp(@RequestBody TimeStampRequestDTO request) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            Long employeeId = request.getEmployeeId();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            LocalDateTime newTimestamp = LocalDateTime.parse(request.getTimestamp(), formatter);
+
+
+            // Llamar al servicio para crear el timestamp
+            timeStampService.addTimeStampWithData(employeeId, newTimestamp);
+
+            // Añadir mensaje de éxito al mapa
+            response.put("message", "Fichaje creado correctamente.");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            // Añadir mensaje de error al mapa
+            response.put("error", "Error al crear el fichaje: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        timeStampService.deleteRecord(id);
+        return ResponseEntity.ok("Record con el id " + id +  " eliminado con exito");
     }
 
 }
