@@ -62,6 +62,15 @@ public class TimeStampController {
         return timeStampService.getTimeStampsByEmployeeId(employeeId);
     }
 
+    @GetMapping("/employee/{employeeId}/month")
+    public List<TimeStampDTO> getTimeStampsByEmployeeIdAndMonth(
+            @PathVariable Long employeeId,
+            @RequestParam int year,
+            @RequestParam int month) {
+        return timeStampService.getTimeStampsByEmployeeIdAndMonth(employeeId, year, month);
+    }
+
+
     @PatchMapping("/{timeTsId}")
     public ResponseEntity<Map<String, Object>> updateTimestamp(
             @PathVariable Long timeTsId,

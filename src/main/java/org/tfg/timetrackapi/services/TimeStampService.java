@@ -12,10 +12,9 @@ public interface TimeStampService {
 
     TimeStamp addTimeStamp(User user);
     void addTimeStampWithData(Long userId, LocalDateTime newTimestamp);
-
     void editTimeStampWithData(Long TimeStId, LocalDateTime newTimestamp);
     List<TimeStampDTO> getTimeStampsByEmployeeId(Long employeeId);
-
+    List<TimeStampDTO> getTimeStampsByEmployeeIdAndMonth(Long employeeId, int year, int month);
     void deleteRecord(Long id);
 
 

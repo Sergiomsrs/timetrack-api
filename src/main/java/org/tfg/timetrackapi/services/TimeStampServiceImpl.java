@@ -68,6 +68,23 @@ public class TimeStampServiceImpl implements TimeStampService{
                 .collect(Collectors.toList());
     }
 
+    public List<TimeStampDTO> getTimeStampsByEmployeeIdAndMonth(Long employeeId, int year, int month) {
+        LocalDateTime start = LocalDateTime.of(year, month, 1, 0, 0);
+        LocalDateTime end = start.withDayOfMonth(start.toLocalDate().lengthOfMonth()).withHour(23).withMinute(59).withSecond(59);
+
+        List<TimeStamp> timeStamps = timeStampRepository.findByEmployeeIdAndTimestampBetween(employeeId, start, end);
+
+        return timeStamps.stream()
+                .map(timeStamp -> new TimeStampDTO(
+                        timeStamp.getId(),
+                        timeStamp.getTimestamp(),
+                        timeStamp.getEmployee().getId()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
     @Override
     public void deleteRecord(Long id) {
         timeStampRepository.deleteById(id);

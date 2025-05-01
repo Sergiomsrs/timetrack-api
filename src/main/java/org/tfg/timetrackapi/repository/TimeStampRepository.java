@@ -16,4 +16,7 @@ public interface TimeStampRepository extends JpaRepository<TimeStamp, Long> {
             LocalDateTime startDate,
             LocalDateTime endDate
     );
+
+    List<TimeStamp> findByEmployeeIdAndTimestampBetween(Long employeeId, LocalDateTime start, LocalDateTime end);
+
 }
