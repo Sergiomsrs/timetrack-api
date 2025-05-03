@@ -11,6 +11,7 @@ import org.tfg.timetrackapi.repository.TimeStampRepository;
 import org.tfg.timetrackapi.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,6 +81,7 @@ public class TimeStampServiceImpl implements TimeStampService{
                         timeStamp.getTimestamp(),
                         timeStamp.getEmployee().getId()
                 ))
+                .sorted(Comparator.comparing(TimeStampDTO::getTimestamp))  // Orden ascendente
                 .collect(Collectors.toList());
     }
 

@@ -11,9 +11,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +29,11 @@ public class ReportServiceImpl implements ReportService {
 
         Map<LocalDate, List<LocalDateTime>> groupedByDay = records.stream()
                 .map(TimeStamp::getTimestamp)
-                .collect(Collectors.groupingBy(LocalDateTime::toLocalDate));
+                .collect(Collectors.groupingBy(
+                        LocalDateTime::toLocalDate,
+                        () -> new TreeMap<>(Comparator.naturalOrder()),
+                        Collectors.toList()
+                ));
 
         List<DailyWorkReportDTO> report = new ArrayList<>();
 
@@ -81,5 +83,12 @@ public class ReportServiceImpl implements ReportService {
         long hours = ms / 3600000;
         long minutes = (ms % 3600000) / 60000;
         return String.format("%dh %02dm", hours, minutes);
+    }
+
+    public List<DailyWorkReportDTO> getEmployeeMonthlyReport(Long employeeId, int year, int month) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth()); // último día del mes
+
+        return getEmployeeMonthlyReport(employeeId, start, end);
     }
 }
