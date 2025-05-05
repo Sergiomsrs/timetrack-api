@@ -11,7 +11,7 @@ import java.util.List;
 public interface TimeStampService {
 
     TimeStamp addTimeStamp(User user);
-    void addTimeStampWithData(Long userId, LocalDateTime newTimestamp);
+    void addTimeStampWithData(Long userId, LocalDateTime newTimestamp, String isMod);
     void editTimeStampWithData(Long TimeStId, LocalDateTime newTimestamp);
     List<TimeStampDTO> getTimeStampsByEmployeeId(Long employeeId);
     List<TimeStampDTO> getTimeStampsByEmployeeIdAndMonth(Long employeeId, int year, int month);

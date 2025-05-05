@@ -14,6 +14,8 @@ public class TimeStamp {
 
     private LocalDateTime timestamp;
 
+    private String isMod;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User employee;
@@ -21,10 +23,19 @@ public class TimeStamp {
     public TimeStamp() {
     }
 
-    public TimeStamp(Long id, LocalDateTime timestamp, User employee) {
+    public TimeStamp(Long id, LocalDateTime timestamp, String isMod, User employee) {
         this.id = id;
         this.timestamp = timestamp;
+        this.isMod = isMod;
         this.employee = employee;
+    }
+
+    public String isMod() {
+        return isMod;
+    }
+
+    public void setMod(String mod) {
+        isMod = mod;
     }
 
     public Long getId() {

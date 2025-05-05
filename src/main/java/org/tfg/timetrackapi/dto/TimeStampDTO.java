@@ -10,19 +10,29 @@ public class TimeStampDTO {
     private LocalDateTime timestamp;
     private Long employeeId;
 
+    private String isMod;
+
 
     public TimeStampDTO() {
     }
 
-    public TimeStampDTO(Long id, LocalDateTime timestamp, Long employeeId) {
+    public TimeStampDTO(Long id, LocalDateTime timestamp, Long employeeId, String isMod) {
         this.id = id;
         this.timestamp = timestamp;
         this.employeeId = employeeId;
+        this.isMod = isMod;
     }
 
     public TimeStampDTO(TimeStampDTO timeStampDTO) {
     }
 
+    public String getIsMod() {
+        return isMod;
+    }
+
+    public void setIsMod(String isMod) {
+        this.isMod = isMod;
+    }
 
     public Long getId() {
         return id;

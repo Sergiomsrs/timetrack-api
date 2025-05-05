@@ -36,13 +36,14 @@ public class TimeStampServiceImpl implements TimeStampService{
 
 
     @Override
-    public void addTimeStampWithData(Long employeeId, LocalDateTime newTimestamp) {
+    public void addTimeStampWithData(Long employeeId, LocalDateTime newTimestamp, String isMod) {
         User user = userRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado con ID: " + employeeId));
 
         TimeStamp newTimeStamp = new TimeStamp();
         newTimeStamp.setEmployee(user);
         newTimeStamp.setTimestamp(newTimestamp);
+        newTimeStamp.setMod(isMod);
 
         timeStampRepository.save(newTimeStamp);
     }
@@ -55,6 +56,7 @@ public class TimeStampServiceImpl implements TimeStampService{
                 ));
 
         timeStamp.setTimestamp(newTimestamp);
+        timeStamp.setMod("true");
         timeStampRepository.save(timeStamp);
     }
 
@@ -64,7 +66,8 @@ public class TimeStampServiceImpl implements TimeStampService{
                 .map(timeStamp -> new TimeStampDTO(
                         timeStamp.getId(),
                         timeStamp.getTimestamp(),
-                        timeStamp.getEmployee().getId()
+                        timeStamp.getEmployee().getId(),
+                        timeStamp.isMod()
                 ))
                 .collect(Collectors.toList());
     }
@@ -79,7 +82,8 @@ public class TimeStampServiceImpl implements TimeStampService{
                 .map(timeStamp -> new TimeStampDTO(
                         timeStamp.getId(),
                         timeStamp.getTimestamp(),
-                        timeStamp.getEmployee().getId()
+                        timeStamp.getEmployee().getId(),
+                        timeStamp.isMod()
                 ))
                 .sorted(Comparator.comparing(TimeStampDTO::getTimestamp))  // Orden ascendente
                 .collect(Collectors.toList());

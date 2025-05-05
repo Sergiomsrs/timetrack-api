@@ -105,10 +105,11 @@ public class TimeStampController {
             Long employeeId = request.getEmployeeId();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
             LocalDateTime newTimestamp = LocalDateTime.parse(request.getTimestamp(), formatter);
+            String isMod = request.getIsMod();
 
 
             // Llamar al servicio para crear el timestamp
-            timeStampService.addTimeStampWithData(employeeId, newTimestamp);
+            timeStampService.addTimeStampWithData(employeeId, newTimestamp, isMod);
 
             // Añadir mensaje de éxito al mapa
             response.put("message", "Fichaje creado correctamente.");
