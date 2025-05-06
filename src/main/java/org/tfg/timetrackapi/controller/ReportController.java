@@ -189,6 +189,7 @@ public class ReportController {
             Font titleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
             Font subtitleFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
             Font normalFont = new Font(Font.FontFamily.HELVETICA, 10);
+            Font redFont = new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC, BaseColor.RED);
             Font warningFont = new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC, BaseColor.RED);
 
             document.add(new Paragraph("Informe de Jornadas Laborales", titleFont));
@@ -223,17 +224,50 @@ public class ReportController {
                             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
                             table.addCell(cell);
                         });
-
                 for (WorkPeriodDTO period : day.periods()) {
-                    table.addCell(new Phrase(period.entry(), normalFont));
-                    table.addCell(new Phrase(period.exit() != null ? period.exit() : "--", normalFont));
-                    table.addCell(new Phrase(formatDuration(period.durationMs()), normalFont));
+                    // Elegir color de fuente para la entrada
+                    Font entryFont = "true".equals(period.inIsMod()) ? redFont : normalFont;
+
+                    // Elegir color de fuente para la salida
+                    Font exitFont = "true".equals(period.outIsMod()) ? redFont : normalFont;
+
+                    String entryText = period.entry();
+                    if ("true".equals(period.inIsMod())) {
+                        entryText += " -MOD";
+                    }
+
+                    String exitText = period.exit();
+                    if ("true".equals(period.outIsMod())) {
+                        exitText += " -MOD";
+                    }
+
+                    // Añadir celdas con las fuentes adecuadas
+                    table.addCell(new Phrase(entryText, entryFont));
+                    table.addCell(new Phrase(period.exit() != null ? exitText : "--", exitFont));
+                    table.addCell(new Phrase(formatDuration(period.durationMs()), normalFont)); // duración se mantiene en negro
                 }
+
 
                 document.add(table);
                 document.add(Chunk.NEWLINE);
+
             }
 
+            // Leyenda
+            document.add(new Paragraph("Leyenda", titleFont));
+
+// Fuentes
+            Font red = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.RED);
+            Font normal = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
+
+// Crear el párrafo para la leyenda
+            Paragraph modLegend = new Paragraph();
+            modLegend.add(new Phrase("El sufijo ", normal));
+            modLegend.add(new Phrase("-MOD", red)); // Mostrar el sufijo en rojo
+            modLegend.add(new Phrase(" indica que el registro ha sido modificado o creado manualmente.", normal));
+
+// Añadir la leyenda al documento
+            document.add(modLegend);
             document.close();
         } catch (DocumentException e) {
             throw new IOException("Error al generar el PDF", e);

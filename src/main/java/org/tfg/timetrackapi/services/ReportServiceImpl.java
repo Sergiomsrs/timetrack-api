@@ -24,56 +24,61 @@ public class ReportServiceImpl implements ReportService {
         List<TimeStamp> records = timestampRepository.findByEmployeeIdAndTimestampBetweenOrderByTimestampAsc(
                 employeeId,
                 startDate.atStartOfDay(),
-                endDate.plusDays(1).atStartOfDay() // hasta el final del día
+                endDate.plusDays(1).atStartOfDay()
         );
 
-        Map<LocalDate, List<LocalDateTime>> groupedByDay = records.stream()
-                .map(TimeStamp::getTimestamp)
+        Map<LocalDate, List<TimeStamp>> groupedByDay = records.stream()
                 .collect(Collectors.groupingBy(
-                        LocalDateTime::toLocalDate,
-                        () -> new TreeMap<>(Comparator.naturalOrder()),
+                        record -> record.getTimestamp().toLocalDate(),
+                        TreeMap::new,
                         Collectors.toList()
                 ));
 
         List<DailyWorkReportDTO> report = new ArrayList<>();
 
-        for (Map.Entry<LocalDate, List<LocalDateTime>> entry : groupedByDay.entrySet()) {
+        for (Map.Entry<LocalDate, List<TimeStamp>> entry : groupedByDay.entrySet()) {
             LocalDate date = entry.getKey();
-            List<LocalDateTime> times = entry.getValue().stream()
-                    .sorted()
-                    .collect(Collectors.toList());
+            List<TimeStamp> dayRecords = entry.getValue();
 
             List<WorkPeriodDTO> periods = new ArrayList<>();
             long totalWorkedMs = 0;
             String warning = null;
 
-            for (int i = 0; i < times.size(); i += 2) {
-                LocalDateTime in = times.get(i);
-                LocalDateTime out = (i + 1 < times.size()) ? times.get(i + 1) : null;
+            for (int i = 0; i < dayRecords.size(); i += 2) {
+                TimeStamp inRecord = dayRecords.get(i);
+                TimeStamp outRecord = (i + 1 < dayRecords.size()) ? dayRecords.get(i + 1) : null;
 
-                long durationMs = (out != null) ? Duration.between(in, out).toMillis() : 0;
+                LocalDateTime in = inRecord.getTimestamp();
+                LocalDateTime out = outRecord != null ? outRecord.getTimestamp() : null;
+
+                long durationMs = out != null ? Duration.between(in, out).toMillis() : 0;
                 if (out == null) warning = "⚠ Falta registro de salida";
 
-                WorkPeriodDTO period = new WorkPeriodDTO(
-                        in.format(DateTimeFormatter.ofPattern("HH:mm")),
-                        (out != null) ? out.format(DateTimeFormatter.ofPattern("HH:mm")) : null,
-                        durationMs,
-                        (out != null)
-                );
+                // Preparamos los valores MOD/NORMAL
+                String inModStatus = "true".equals(inRecord.isMod()) ? "true" : "false";
+                String outModStatus = outRecord != null
+                        ? ("true".equals(outRecord.isMod()) ? "true" : "false")
+                        : "NO REGISTRADO";
 
-                periods.add(period);
+                periods.add(new WorkPeriodDTO(
+                        in.format(DateTimeFormatter.ofPattern("HH:mm")),
+                        out != null ? out.format(DateTimeFormatter.ofPattern("HH:mm")) : null,
+                        inModStatus,
+                        out != null ? outModStatus : null,
+                        durationMs,
+                        out != null
+                ));
+
                 totalWorkedMs += durationMs;
             }
 
-            DailyWorkReportDTO dayReport = new DailyWorkReportDTO(
+            report.add(new DailyWorkReportDTO(
                     date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     periods,
                     formatDuration(totalWorkedMs),
-                    times.size(),
+                    dayRecords.size(),
                     warning
-            );
-
-            report.add(dayReport);
+            ));
         }
 
         return report;
