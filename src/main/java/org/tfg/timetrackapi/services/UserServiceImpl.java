@@ -2,6 +2,7 @@ package org.tfg.timetrackapi.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
@@ -14,9 +15,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -28,8 +31,13 @@ public class UserServiceImpl implements UserService {
         user.setSecondLastName(userDTO.getSecondLastName());
         user.setAccessLevel(userDTO.getAccessLevel());
         user.setDni(userDTO.getDni());
-        user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
+
+        // Encriptar la contraseña antes de guardarla
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        user.setPassword(encodedPassword);
+        user.setRole(userDTO.getRole());
+
 
         User savedUser = userRepository.save(user);
 
@@ -39,8 +47,10 @@ public class UserServiceImpl implements UserService {
                 savedUser.getSecondLastName(),
                 savedUser.getAccessLevel(),
                 savedUser.getDni(),
-                savedUser.getPassword(),
-                savedUser.getEmail()
+                null,
+                savedUser.getEmail(),
+                savedUser.getRole()
+
         );
     }
 

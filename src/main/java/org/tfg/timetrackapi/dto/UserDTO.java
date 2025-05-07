@@ -1,5 +1,7 @@
 package org.tfg.timetrackapi.dto;
 
+import org.tfg.timetrackapi.entity.Role;
+
 public class UserDTO {
 
     private String name;
@@ -12,6 +14,8 @@ public class UserDTO {
 
     private String email;
 
+    private Role role;
+
     public UserDTO() {
     }
 
@@ -23,6 +27,25 @@ public class UserDTO {
         this.dni = dni;
         this.password = password;
         this.email = email;
+    }
+
+    public UserDTO(String name, String lastName, String secondLastName, int accessLevel, String dni, String password, String email, Role role) {
+        this.name = name;
+        this.lastName = lastName;
+        this.secondLastName = secondLastName;
+        this.accessLevel = accessLevel;
+        this.dni = dni;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getName() {
