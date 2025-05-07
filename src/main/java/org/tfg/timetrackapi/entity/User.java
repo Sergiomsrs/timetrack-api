@@ -34,6 +34,9 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
 
     public User() {
     }
@@ -47,6 +50,26 @@ public class User {
         this.dni = dni;
         this.password = password;
         this.email = email;
+    }
+
+    public User(Long id, String name, String lastName, String secondLastName, int accessLevel, String dni, String password, String email, Role role) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.secondLastName = secondLastName;
+        this.accessLevel = accessLevel;
+        this.dni = dni;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public Long getId() {
