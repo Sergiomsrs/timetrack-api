@@ -1,0 +1,23 @@
+meta {
+  name: Create User
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/user
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Ejemplo",
+    "lastName": "Usuario",
+    "secondLastName": "Uno",
+    "accessLevel": 1,
+    "dni": "12345678Z",
+    "password": "contrasenaSegura",
+    "email": "ejemplo.usuario@email.com"
+  }
+}
