@@ -20,18 +20,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String dni) throws UsernameNotFoundException {
-        System.out.println("Intentando cargar usuario con DNI: " + dni); // Añade este log
+        System.out.println("Intentando cargar usuario con DNI: " + dni);
         return userRepository.findByDni(dni)
                 .map(user -> {
-                    System.out.println("Usuario encontrado: " + user.getDni()); // Añade este log
-                    return new org.springframework.security.core.userdetails.User(
-                            user.getDni(),
-                            user.getPassword(),
-                            List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
-                    );
+                    System.out.println("Usuario encontrado: " + user.getDni());
+                    return new CustomUserDetails(user); // En lugar de crear un User de Spring Security
                 })
                 .orElseThrow(() -> {
-                    System.out.println("Usuario no encontrado con DNI: " + dni); // Añade este log
+                    System.out.println("Usuario no encontrado con DNI: " + dni);
                     return new UsernameNotFoundException("Usuario no encontrado con DNI: " + dni);
                 });
     }

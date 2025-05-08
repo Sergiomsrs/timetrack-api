@@ -5,15 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.security.dto.AuthResponse;
 import org.tfg.timetrackapi.security.dto.LoginRequest;
+import org.tfg.timetrackapi.security.service.CustomUserDetails;
 import org.tfg.timetrackapi.security.service.JwtService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -28,13 +27,19 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         System.out.println("¡Petición de login recibida!");
 
-
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getDni(), request.getPassword()));
+                new UsernamePasswordAuthenticationToken(request.getDni(), request.getPassword())
+        );
 
-        String token = jwtService.generateToken(request.getDni());
+        // Aquí usamos CustomUserDetails para obtener el 'User'
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = customUserDetails.getUser();
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        String token = jwtService.generateToken(user.getDni());
+
+        System.out.println(user.getRole());
+
+        return ResponseEntity.ok(new AuthResponse(token, user.getRole()));
     }
 }
 

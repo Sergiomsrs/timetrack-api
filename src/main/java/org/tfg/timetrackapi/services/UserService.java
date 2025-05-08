@@ -6,6 +6,7 @@ import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -25,6 +26,8 @@ public interface UserService {
 
     Page<User> getUsers(Pageable pageable);
     Page<User> searchUsersByName(String name, Pageable pageable);
+
+    Optional<User> findByDni(String dni);
 
 
 }

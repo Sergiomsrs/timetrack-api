@@ -2,6 +2,8 @@ package org.tfg.timetrackapi.services;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.tfg.timetrackapi.dto.UserDTO;
@@ -9,6 +11,7 @@ import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -61,6 +64,8 @@ public class UserServiceImpl implements UserService {
                 () -> new RuntimeException("Usuario no encontrado con ID: " + id)
         );
 
+
+
         userToUpdate.setName(userDTO.getName());
         userToUpdate.setLastName(userDTO.getLastName());
         userToUpdate.setSecondLastName(userDTO.getSecondLastName());
@@ -68,6 +73,10 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setDni(userDTO.getDni());
         userToUpdate.setPassword(userDTO.getPassword());
         userToUpdate.setEmail(userDTO.getEmail());
+
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        userToUpdate.setPassword(encodedPassword);
+        userToUpdate.setRole(userDTO.getRole());
 
         User updatedUser = userRepository.save(userToUpdate);
 
@@ -100,13 +109,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User authenticateUser(String dni, String password) {
+    public User authenticateUser(String dni, String rawPassword) {
         User user = userRepository.findByDni(dni)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con DNI: " + dni));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        // Verificar si el PIN es correcto
-        if (!user.getPassword().equals(password)) {
-            throw new RuntimeException("PIN incorrecto para el DNI: " + dni);
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new BadCredentialsException("Contraseña incorrecta");
         }
 
         return user;
@@ -129,5 +137,10 @@ public class UserServiceImpl implements UserService {
 
     public boolean existsById(Long id) {
         return userRepository.existsById(id);
+    }
+
+    @Override
+    public Optional<User> findByDni(String dni) {
+        return userRepository.findByDni(dni);
     }
 }

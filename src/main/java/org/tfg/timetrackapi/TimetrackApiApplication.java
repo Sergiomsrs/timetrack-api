@@ -9,7 +9,6 @@ public class TimetrackApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TimetrackApiApplication.class, args);
-		System.out.println(new BCryptPasswordEncoder().encode("test1234"));
 	}
 
 }

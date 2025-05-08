@@ -5,6 +5,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
@@ -89,6 +92,15 @@ public class UserController {
         Page<User> users = userService.searchUsersByName(name, pageable);
         return ResponseEntity.ok(users);
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByDni(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        UserDTO dto = new UserDTO(user.getId(), user.getName(), user.getLastName(), user.getDni(), user.getRole());
+        return ResponseEntity.ok(dto);
+    }
+
 }
 
 
