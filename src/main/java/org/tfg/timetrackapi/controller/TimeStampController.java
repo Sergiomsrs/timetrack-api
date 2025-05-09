@@ -2,6 +2,7 @@ package org.tfg.timetrackapi.controller;
 
 
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.FichajeRequest;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
@@ -122,6 +123,7 @@ public class TimeStampController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         timeStampService.deleteRecord(id);
         return ResponseEntity.ok("Record con el id " + id +  " eliminado con exito");

@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,15 +26,14 @@ public class UserController {
 
     private final UserService userService;
 
-    private final ReportServiceImpl reportServiceImpl;
-
-    public UserController(UserService userService, ReportServiceImpl reportServiceImpl) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.reportServiceImpl = reportServiceImpl;
+
     }
 
 // Create
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
 
         UserDTO userSaved = userService.save(userDTO);
@@ -46,6 +46,7 @@ public class UserController {
     // Read
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> findAll(){
         return userService.findAll();
     }
@@ -60,6 +61,7 @@ public class UserController {
     // Update
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
         UserDTO updatedUser = userService.update(id, userDTO);
         return ResponseEntity.ok(updatedUser);
@@ -68,12 +70,14 @@ public class UserController {
     // Delete
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         userService.delete(id);
         return ResponseEntity.ok("Usuario con el id " + id +  " eliminado con exito");
     }
 
     @GetMapping("/pag")
+    @PreAuthorize("hasRole('ADMIN')")
     public Page<User> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -83,6 +87,7 @@ public class UserController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<User>> searchUsers(
             @RequestParam String name,
             @RequestParam(defaultValue = "0") int page,
@@ -94,6 +99,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByDni(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
