@@ -3,6 +3,7 @@ package org.tfg.timetrackapi.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -38,25 +40,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(Customizer.withDefaults()) // <- habilita CORS con configuración por defecto o personalizada
+        return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas públicas
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/user/me").permitAll()
+                        // Rutas Libres
+                        .requestMatchers("/api/auth/login", "/api/timestamp/fichar").permitAll()
 
-                        // Rutas solo para ADMIN
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/report/**").authenticated()
+                        // Rutas Autenticadas
+                        .requestMatchers("/api/user/me").authenticated()
 
-                        // Las demás requieren autenticación
+                        // Rutas Solo Rol ADMIN
+                        .requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("ADMIN")   // Permitir GET
+                        .requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("ADMIN")   // Permitir PUT
+                        .requestMatchers(HttpMethod.DELETE, "/api/user/{id}").hasRole("ADMIN")  // Permitir DELETE
+                        .requestMatchers(HttpMethod.PATCH, "/api/timestamp/{recordId}").hasRole("ADMIN")  // Permitir PATCH
+                        .requestMatchers(HttpMethod.GET, "/api/timestamp/employee/*/month").hasRole("ADMIN")
+
+                        .requestMatchers("/api/report/employee/{employeeId}/report/pdf/monthly", "/api/timestamp/timestamp","api/employee/{employeeId}/month", "/api/user/{editedEmployeeId}", "/api/user/{employeeId}")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/api/user/search").hasRole("ADMIN")
+                        .requestMatchers("/api/user/pag").hasRole("ADMIN")
+
+                        // Rutas rol admin y guest
+                        .requestMatchers("/api/user").hasAnyRole("ADMIN", "GUEST")
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
@@ -80,14 +92,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // O usa "*" para permitir todos
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true); // Solo si usas cookies, no necesario con JWT
-
+        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // Origen de tu frontend en desarrollo
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // Preflight cache duration
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+
 }
 

@@ -1,12 +1,13 @@
 package org.tfg.timetrackapi.security.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -15,14 +16,15 @@ public class JwtService {
     private final Key secretKey;
 
     public JwtService() {
-        this.secretKey = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
+        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    public String generateToken(String dni) {
-        // ... (tu código de generación de token como antes)
-        java.util.Map<String, Object> claims = new java.util.HashMap<>();
-        claims.put("sub", dni);
+    public String generateToken(String dni, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", dni); // estándar para subject
+        claims.put("role", role); // nuevo claim con el rol
         claims.put("iat", new Date());
+
         long expirationTimeMs = 3600000; // 1 hora
         Date expiryDate = new Date(System.currentTimeMillis() + expirationTimeMs);
         claims.put("exp", expiryDate);
@@ -37,6 +39,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
@@ -48,7 +54,7 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(secretKey) // Usa la misma clave para parsear
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -63,4 +69,3 @@ public class JwtService {
         return (extractedDni.equals(dni) && !isTokenExpired(token));
     }
 }
-
