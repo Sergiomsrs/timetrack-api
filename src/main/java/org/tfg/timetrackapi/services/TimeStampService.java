@@ -1,5 +1,6 @@
 package org.tfg.timetrackapi.services;
 
+import org.tfg.timetrackapi.dto.Last3Dto;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
 import org.tfg.timetrackapi.dto.TimeStampDataDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
@@ -16,6 +17,8 @@ public interface TimeStampService {
     List<TimeStampDTO> getTimeStampsByEmployeeId(Long employeeId);
     List<TimeStampDTO> getTimeStampsByEmployeeIdAndMonth(Long employeeId, int year, int month);
     void deleteRecord(Long id);
+    List<Last3Dto> getLastThreeTimestamps();
+
 
 
 }

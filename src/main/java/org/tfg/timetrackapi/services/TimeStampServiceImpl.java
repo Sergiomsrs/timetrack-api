@@ -3,6 +3,7 @@ package org.tfg.timetrackapi.services;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.tfg.timetrackapi.dto.Last3Dto;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
 import org.tfg.timetrackapi.dto.TimeStampDataDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
@@ -11,6 +12,7 @@ import org.tfg.timetrackapi.repository.TimeStampRepository;
 import org.tfg.timetrackapi.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,4 +97,19 @@ public class TimeStampServiceImpl implements TimeStampService{
     public void deleteRecord(Long id) {
         timeStampRepository.deleteById(id);
     }
+
+    @Override
+    public List<Last3Dto> getLastThreeTimestamps() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
+        return timeStampRepository.findTop3ByOrderByIdDesc().stream()
+                .map(t -> new Last3Dto(
+                        t.getId(),
+                        t.getTimestamp().format(formatter),
+                        t.getEmployee().getDni()
+                ))
+                .collect(Collectors.toList());
+    }
+
+
 }

@@ -1,10 +1,14 @@
 package org.tfg.timetrackapi.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.tfg.timetrackapi.dto.Last3Dto;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
 
+import java.security.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public interface TimeStampRepository extends JpaRepository<TimeStamp, Long> {
@@ -18,5 +22,8 @@ public interface TimeStampRepository extends JpaRepository<TimeStamp, Long> {
     );
 
     List<TimeStamp> findByEmployeeIdAndTimestampBetween(Long employeeId, LocalDateTime start, LocalDateTime end);
+
+    List<TimeStamp> findTop3ByOrderByIdDesc();
+
 
 }

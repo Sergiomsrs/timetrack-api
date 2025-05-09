@@ -3,13 +3,12 @@ package org.tfg.timetrackapi.controller;
 
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.tfg.timetrackapi.dto.FichajeRequest;
-import org.tfg.timetrackapi.dto.TimeStampDTO;
-import org.tfg.timetrackapi.dto.TimeStampDataDTO;
-import org.tfg.timetrackapi.dto.TimeStampRequestDTO;
+import org.tfg.timetrackapi.dto.*;
 import org.tfg.timetrackapi.entity.TimeStamp;
 import org.tfg.timetrackapi.entity.User;
+import org.tfg.timetrackapi.security.service.CustomUserDetails;
 import org.tfg.timetrackapi.services.TimeStampService;
 import org.tfg.timetrackapi.services.UserService;
 
@@ -64,11 +63,24 @@ public class TimeStampController {
     }
 
     @GetMapping("/employee/{employeeId}/month")
-    public List<TimeStampDTO> getTimeStampsByEmployeeIdAndMonth(
+    public ResponseEntity<List<TimeStampDTO>> getTimeStampsByEmployeeIdAndMonth(
             @PathVariable Long employeeId,
             @RequestParam int year,
-            @RequestParam int month) {
-        return timeStampService.getTimeStampsByEmployeeIdAndMonth(employeeId, year, month);
+            @RequestParam int month,
+            Authentication authentication) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
+
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+        boolean isSelf = user.getId().equals(employeeId);
+
+        if (!isAdmin && !isSelf) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        List<TimeStampDTO> result = timeStampService.getTimeStampsByEmployeeIdAndMonth(employeeId, year, month);
+        return ResponseEntity.ok(result);
     }
 
 
@@ -123,10 +135,14 @@ public class TimeStampController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         timeStampService.deleteRecord(id);
         return ResponseEntity.ok("Record con el id " + id +  " eliminado con exito");
+    }
+
+    @GetMapping("/last3")
+    public List<Last3Dto> getLastThreeTimestamps() {
+        return timeStampService.getLastThreeTimestamps();
     }
 
 }
