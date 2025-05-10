@@ -50,13 +50,13 @@ public class SecurityConfig {
 
                         // Rutas solo accesibles por administradores
                         .requestMatchers(HttpMethod.POST, "/api/user").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/user").hasAnyRole("ADMIN", "GUEST")
                         .requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/user/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/user/pag").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/user/search").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/report/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/report/**").hasAnyRole("ADMIN", "GUEST")
                         .requestMatchers(HttpMethod.POST, "/api/timestamp/add/{userId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/timestamp/employee/{employeeId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/timestamp/{timeTsId}").hasRole("ADMIN")

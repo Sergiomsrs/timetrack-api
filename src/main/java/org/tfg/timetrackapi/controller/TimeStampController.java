@@ -72,7 +72,7 @@ public class TimeStampController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = userDetails.getUser();
 
-        boolean isAdmin = user.getRole().name().equals("ADMIN");
+        boolean isAdmin = user.getRole().name().equals("ADMIN")|| user.getRole().name().equals("GUEST");
         boolean isSelf = user.getId().equals(employeeId);
 
         if (!isAdmin && !isSelf) {
