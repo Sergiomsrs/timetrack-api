@@ -11,6 +11,7 @@ import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.repository.TimeStampRepository;
 import org.tfg.timetrackapi.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -23,9 +24,12 @@ public class TimeStampServiceImpl implements TimeStampService{
     private final TimeStampRepository timeStampRepository;
     private final UserRepository userRepository;
 
-    public TimeStampServiceImpl(TimeStampRepository timeStampRepository, UserRepository userRepository) {
+    private final EmailService emailService;
+
+    public TimeStampServiceImpl(TimeStampRepository timeStampRepository, UserRepository userRepository, EmailService emailService) {
         this.timeStampRepository = timeStampRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -57,10 +61,31 @@ public class TimeStampServiceImpl implements TimeStampService{
                         HttpStatus.NOT_FOUND, "No se encontró el fichaje con ID: " + timeStId
                 ));
 
+        LocalDateTime last = timeStamp.getTimestamp();
+        String destinatario = timeStamp.getEmployee().getEmail(); // podrías obtenerlo del usuario
+
+        // Actualiza el timestamp y marca como modificado
         timeStamp.setTimestamp(newTimestamp);
         timeStamp.setMod("true");
         timeStampRepository.save(timeStamp);
+
+        // Datos para el correo electrónico
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy 'a las' HH:mm");
+        DateTimeFormatter hFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        String asunto = "Registro actualizado";
+        String cuerpo = "Hola, tu registro del día "+ last.format(formatter)  + " ha sido modificado a las " +  newTimestamp.format(hFormatter);
+
+        // Intentamos enviar el correo
+        try {
+            emailService.enviarEmail(destinatario, asunto, cuerpo);
+        } catch (Exception e) {
+            // Captura cualquier excepción y loguea el error
+            System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
+            // Loguear el error usando un logger sería lo ideal
+            // logger.error("Error al enviar el correo electrónico", e);
+        }
     }
+
 
     public List<TimeStampDTO> getTimeStampsByEmployeeId(Long employeeId) {
         List<TimeStamp> timeStamps = timeStampRepository.findByEmployeeId(employeeId);
