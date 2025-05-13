@@ -25,5 +25,8 @@ public interface TimeStampRepository extends JpaRepository<TimeStamp, Long> {
 
     List<TimeStamp> findTop3ByOrderByIdDesc();
 
+    void deleteAllByEmployee_Id(Long employeeId);
+
+
 
 }

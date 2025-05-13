@@ -1,5 +1,6 @@
 package org.tfg.timetrackapi.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -154,6 +155,12 @@ public class TimeStampServiceImpl implements TimeStampService{
 
 
         timeStampRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByEmployeeId(Long employeeId) {
+        timeStampRepository.deleteAllByEmployee_Id(employeeId);
     }
 
     @Override

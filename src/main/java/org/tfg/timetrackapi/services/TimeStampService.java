@@ -17,6 +17,9 @@ public interface TimeStampService {
     List<TimeStampDTO> getTimeStampsByEmployeeId(Long employeeId);
     List<TimeStampDTO> getTimeStampsByEmployeeIdAndMonth(Long employeeId, int year, int month);
     void deleteRecord(Long id);
+
+    void deleteByEmployeeId(Long employeeId);
+
     List<Last3Dto> getLastThreeTimestamps();
 
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.services.ReportServiceImpl;
+import org.tfg.timetrackapi.services.TimeStampService;
 import org.tfg.timetrackapi.services.UserService;
 
 import java.util.List;
@@ -25,10 +26,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final TimeStampService timeStampService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, TimeStampService timeStampService) {
         this.userService = userService;
-
+        this.timeStampService = timeStampService;
     }
 
 // Create
@@ -72,6 +74,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
+        timeStampService.deleteByEmployeeId(id);
         userService.delete(id);
         return ResponseEntity.ok("Usuario con el id " + id +  " eliminado con exito");
     }
