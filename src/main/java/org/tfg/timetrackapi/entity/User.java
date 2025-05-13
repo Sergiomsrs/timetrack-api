@@ -21,8 +21,7 @@ public class User {
     @Size(min = 3)
     private String lastName;
 
-    @NotBlank
-    @Size(min = 3)
+
     private String secondLastName;
 
 
