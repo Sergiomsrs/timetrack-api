@@ -71,12 +71,17 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setSecondLastName(userDTO.getSecondLastName());
         userToUpdate.setAccessLevel(userDTO.getAccessLevel());
         userToUpdate.setDni(userDTO.getDni());
-        userToUpdate.setPassword(userDTO.getPassword());
         userToUpdate.setEmail(userDTO.getEmail());
-
-        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
-        userToUpdate.setPassword(encodedPassword);
         userToUpdate.setRole(userDTO.getRole());
+
+       // validar si la contraseña ha sido modificada
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
+           // Validar si la contraseña esta encriptada
+            if (!passwordEncoder.matches(userDTO.getPassword(), userToUpdate.getPassword())) {
+                String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+                userToUpdate.setPassword(encodedPassword);
+            }
+        }
 
         User updatedUser = userRepository.save(userToUpdate);
 
