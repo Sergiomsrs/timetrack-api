@@ -3,6 +3,7 @@ package org.tfg.timetrackapi.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ import org.tfg.timetrackapi.services.TimeStampService;
 import org.tfg.timetrackapi.services.UserService;
 
 import java.util.List;
-
+import java.util.Map;
 
 
 @CrossOrigin("*")
@@ -36,13 +37,16 @@ public class UserController {
 // Create
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO){
-
-        UserDTO userSaved = userService.save(userDTO);
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(userSaved);
+    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
+        try {
+            UserDTO userSaved = userService.save(userDTO);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(userSaved);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Error al crear el usuario", "details", e.getMessage()));
+        }
     }
 
     // Read
