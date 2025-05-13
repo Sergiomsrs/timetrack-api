@@ -32,9 +32,10 @@ public class UserServiceImpl implements UserService {
         user.setName(userDTO.getName());
         user.setLastName(userDTO.getLastName());
         user.setSecondLastName(userDTO.getSecondLastName());
-        user.setAccessLevel(userDTO.getAccessLevel());
         user.setDni(userDTO.getDni());
         user.setEmail(userDTO.getEmail());
+        user.setFechaAlta(userDTO.getFechaAlta());
+        user.setFechaBaja(userDTO.getFechaBaja());
 
         // Encriptar la contraseña antes de guardarla
         String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
@@ -48,12 +49,12 @@ public class UserServiceImpl implements UserService {
                 savedUser.getName(),
                 savedUser.getLastName(),
                 savedUser.getSecondLastName(),
-                savedUser.getAccessLevel(),
                 savedUser.getDni(),
                 null,
                 savedUser.getEmail(),
-                savedUser.getRole()
-
+                savedUser.getRole(),
+                savedUser.getFechaAlta(),
+                savedUser.getFechaBaja()
         );
     }
 
@@ -69,10 +70,11 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setName(userDTO.getName());
         userToUpdate.setLastName(userDTO.getLastName());
         userToUpdate.setSecondLastName(userDTO.getSecondLastName());
-        userToUpdate.setAccessLevel(userDTO.getAccessLevel());
         userToUpdate.setDni(userDTO.getDni());
         userToUpdate.setEmail(userDTO.getEmail());
         userToUpdate.setRole(userDTO.getRole());
+        userToUpdate.setFechaAlta(userDTO.getFechaAlta());
+        userToUpdate.setFechaBaja(userDTO.getFechaBaja());
 
        // validar si la contraseña ha sido modificada
         if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
@@ -89,10 +91,12 @@ public class UserServiceImpl implements UserService {
                 updatedUser.getName(),
                 updatedUser.getLastName(),
                 updatedUser.getSecondLastName(),
-                updatedUser.getAccessLevel(),
                 updatedUser.getDni(),
                 updatedUser.getPassword(),
-                updatedUser.getEmail()
+                updatedUser.getEmail(),
+                updatedUser.getRole(),
+                updatedUser.getFechaAlta(),
+                updatedUser.getFechaBaja()
         );
     }
 
@@ -128,6 +132,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
        return userRepository.findAll();
+    }
+
+    @Override
+    public List<User> findAllActive() {
+        return userRepository.findAllActive();
     }
 
     @Override

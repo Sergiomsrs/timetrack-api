@@ -196,6 +196,7 @@ public class ReportController {
             document.add(new Paragraph("Empleado: " + user.getName() + " " + user.getLastName() + " " + user.getSecondLastName() + " ", subtitleFont));
             document.add(new Paragraph("DNI: " + user.getDni() , subtitleFont));
             document.add(new Paragraph("Mes: " + month + "  Año: " + year, subtitleFont));
+            document.add(new Paragraph("Fecha de Alta: " + user.getFechaAlta(), subtitleFont));
             document.add(Chunk.NEWLINE);
 
 

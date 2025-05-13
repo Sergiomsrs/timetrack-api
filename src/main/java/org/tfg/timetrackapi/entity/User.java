@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
+
 @Entity
 public class User {
 
@@ -23,7 +25,6 @@ public class User {
     @Size(min = 3)
     private String secondLastName;
 
-    private int accessLevel;
 
     @Column(unique = true)
     @NotBlank
@@ -37,31 +38,49 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "fecha_alta")
+    private LocalDate fechaAlta;
+
+    @Column(name = "fecha_baja")
+    private LocalDate fechaBaja;
+
+
 
     public User() {
     }
 
-    public User(Long id, String name, String lastName, String secondLastName, int accessLevel, String dni, String password, String email) {
+    public User(Long id, String name, String lastName, String secondLastName, String dni, String password, String email) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
-        this.accessLevel = accessLevel;
         this.dni = dni;
         this.password = password;
         this.email = email;
     }
 
-    public User(Long id, String name, String lastName, String secondLastName, int accessLevel, String dni, String password, String email, Role role) {
+    public User(Long id, String name, String lastName, String secondLastName, String dni, String password, String email, Role role) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
-        this.accessLevel = accessLevel;
         this.dni = dni;
         this.password = password;
         this.email = email;
         this.role = role;
+    }
+
+    public User(Long id, String name, String lastName, String secondLastName, String dni, String password, String email, Role role, LocalDate fechaAlta, LocalDate fechaBaja) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.secondLastName = secondLastName;
+        this.dni = dni;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.fechaAlta = fechaAlta;
+        this.fechaBaja = fechaBaja;
     }
 
     public Role getRole() {
@@ -104,14 +123,6 @@ public class User {
         this.secondLastName = secondLastName;
     }
 
-    public int getAccessLevel() {
-        return accessLevel;
-    }
-
-    public void setAccessLevel(int accessLevel) {
-        this.accessLevel = accessLevel;
-    }
-
     public String getDni() {
         return dni;
     }
@@ -134,5 +145,21 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDate getFechaAlta() {
+        return fechaAlta;
+    }
+
+    public void setFechaAlta(LocalDate fechaAlta) {
+        this.fechaAlta = fechaAlta;
+    }
+
+    public LocalDate getFechaBaja() {
+        return fechaBaja;
+    }
+
+    public void setFechaBaja(LocalDate fechaBaja) {
+        this.fechaBaja = fechaBaja;
     }
 }

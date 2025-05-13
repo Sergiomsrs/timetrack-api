@@ -2,9 +2,11 @@ package org.tfg.timetrackapi.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.tfg.timetrackapi.dto.Last3Dto;
 import org.tfg.timetrackapi.dto.TimeStampDTO;
 import org.tfg.timetrackapi.entity.TimeStamp;
+import org.tfg.timetrackapi.entity.User;
 
 import java.security.Timestamp;
 import java.time.LocalDateTime;
@@ -26,6 +28,9 @@ public interface TimeStampRepository extends JpaRepository<TimeStamp, Long> {
     List<TimeStamp> findTop3ByOrderByIdDesc();
 
     void deleteAllByEmployee_Id(Long employeeId);
+
+
+
 
 
 

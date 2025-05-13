@@ -21,6 +21,9 @@ public interface UserService {
     User authenticateUser (String dni, String password);
 
     List<User> findAll();
+    List<User> findAllActive();
+
+
 
     public boolean existsById(Long id);
 

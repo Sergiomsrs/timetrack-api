@@ -53,6 +53,11 @@ public class UserController {
         return userService.findAll();
     }
 
+    @GetMapping("/active")
+    public List<User> findAllActive(){
+        return userService.findAllActive();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getById(id);

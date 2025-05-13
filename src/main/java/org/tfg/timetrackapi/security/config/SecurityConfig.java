@@ -51,6 +51,7 @@ public class SecurityConfig {
                         // Rutas solo accesibles por administradores
                         .requestMatchers(HttpMethod.POST, "/api/user").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/user").hasAnyRole("ADMIN", "GUEST")
+                        .requestMatchers(HttpMethod.GET, "/api/user/active").hasAnyRole("ADMIN", "GUEST")
                         .requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/user/{id}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/user/{id}").hasRole("ADMIN")

@@ -1,6 +1,9 @@
 package org.tfg.timetrackapi.dto;
 
+import jakarta.persistence.Column;
 import org.tfg.timetrackapi.entity.Role;
+
+import java.time.LocalDate;
 
 public class UserDTO {
 
@@ -8,7 +11,6 @@ public class UserDTO {
     private String name;
     private String lastName;
     private String secondLastName;
-    private int accessLevel;
 
     private String dni;
     private String password;
@@ -17,24 +19,26 @@ public class UserDTO {
 
     private Role role;
 
+    private LocalDate fechaAlta;
+
+    private LocalDate fechaBaja;
+
     public UserDTO() {
     }
 
-    public UserDTO(String name, String lastName, String secondLastName, int accessLevel, String dni, String password, String email) {
+    public UserDTO(String name, String lastName, String secondLastName, String dni, String password, String email) {
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
-        this.accessLevel = accessLevel;
         this.dni = dni;
         this.password = password;
         this.email = email;
     }
 
-    public UserDTO(String name, String lastName, String secondLastName, int accessLevel, String dni, String password, String email, Role role) {
+    public UserDTO(String name, String lastName, String secondLastName, String dni, String password, String email, Role role) {
         this.name = name;
         this.lastName = lastName;
         this.secondLastName = secondLastName;
-        this.accessLevel = accessLevel;
         this.dni = dni;
         this.password = password;
         this.email = email;
@@ -54,6 +58,19 @@ public class UserDTO {
         this.lastName = lastName;
         this.dni = dni;
         this.role = role;
+    }
+
+    public UserDTO( String name, String lastName, String secondLastName, String dni, String password, String email, Role role, LocalDate fechaAlta, LocalDate fechaBaja) {
+
+        this.name = name;
+        this.lastName = lastName;
+        this.secondLastName = secondLastName;
+        this.dni = dni;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.fechaAlta = fechaAlta;
+        this.fechaBaja = fechaBaja;
     }
 
     public Long getId() {
@@ -96,14 +113,6 @@ public class UserDTO {
         this.secondLastName = secondLastName;
     }
 
-    public int getAccessLevel() {
-        return accessLevel;
-    }
-
-    public void setAccessLevel(int accessLevel) {
-        this.accessLevel = accessLevel;
-    }
-
     public String getDni() {
         return dni;
     }
@@ -126,5 +135,21 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDate getFechaAlta() {
+        return fechaAlta;
+    }
+
+    public void setFechaAlta(LocalDate fechaAlta) {
+        this.fechaAlta = fechaAlta;
+    }
+
+    public LocalDate getFechaBaja() {
+        return fechaBaja;
+    }
+
+    public void setFechaBaja(LocalDate fechaBaja) {
+        this.fechaBaja = fechaBaja;
     }
 }
