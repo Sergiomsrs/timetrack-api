@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeScheduleImpl implements EmployeeScheduleService{
@@ -183,6 +184,22 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                 }
             }
         }
+
+    @Override
+    public List<EmployeeScheduleDTO> getSchedulesByUserId(Long userId) {
+        return employeeScheduleRepository.findAllByUserId(userId)
+                .stream()
+                .map(schedule -> {
+                    EmployeeScheduleDTO dto = new EmployeeScheduleDTO();
+                    dto.setDni(schedule.getUser().getDni());
+                    dto.setHora(schedule.getHora());
+                    dto.setDia(schedule.getDia());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+
 }
 
 

@@ -11,5 +11,7 @@ public interface EmployeeScheduleRepository extends JpaRepository<EmployeeSchedu
 
     List<EmployeeSchedule> findByUserIdAndDia(Long userId, DayOfWeek dia);
 
+    List<EmployeeSchedule> findAllByUserId(Long userId);
+
 
 }

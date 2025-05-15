@@ -40,6 +40,11 @@ public class EmployeeScheduleController {
         return absenceNotificationService.getLast10SchedulesDTO();
     }
 
+    @GetMapping("/user/{userId}")
+    public List<EmployeeScheduleDTO> getSchedulesByUserId(@PathVariable Long userId) {
+        return employeeScheduleService.getSchedulesByUserId(userId);
+    }
+
 
 
 

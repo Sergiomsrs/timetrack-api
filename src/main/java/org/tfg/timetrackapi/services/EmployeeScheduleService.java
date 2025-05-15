@@ -14,6 +14,8 @@ public interface EmployeeScheduleService {
     EmployeeScheduleDTO update (Long id, EmployeeScheduleDTO dto);
     public void verificarFichajes();
 
+    List<EmployeeScheduleDTO> getSchedulesByUserId(Long userId);
+
 
 
 }
