@@ -2,6 +2,7 @@ package org.tfg.timetrackapi.services;
 
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.tfg.timetrackapi.dto.EmployeeScheduleDTO;
 import org.tfg.timetrackapi.entity.AbsenceNotification;
@@ -70,6 +71,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
         }
     }
 
+
     @Override
     public EmployeeScheduleDTO update(Long id, EmployeeScheduleDTO dto) {
         Optional<EmployeeSchedule> optionalSchedule = employeeScheduleRepository.findById(id);
@@ -108,6 +110,8 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
         }
     }
 
+    @Scheduled(cron = "0 0 8-20/2 * * MON-FRI", zone = "Europe/Madrid")
+    //@Scheduled(cron = "0 * * * * MON-FRI", zone = "Europe/Madrid")
     @Override
     public void verificarFichajes() {
 

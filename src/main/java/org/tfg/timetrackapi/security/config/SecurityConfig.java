@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas o accesibles sin autenticación
-                        .requestMatchers("/api/auth/login", "/api/user/me", "/api/user/{id}", "/api/timestamp/fichar", "/api/timestamp/last3","/api/horarios/verificar").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/user/me", "/api/user/{id}", "/api/timestamp/fichar", "/api/timestamp/last3","/api/horarios/verificar","/api/horarios/last10").permitAll()
 
                         // Rutas solo accesibles por administradores
                         .requestMatchers(HttpMethod.POST, "/api/user").hasRole("ADMIN")
