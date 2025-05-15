@@ -26,5 +26,13 @@ public class EmployeeScheduleController {
         return ResponseEntity.ok("Horario guardado correctamente");
     }
 
+    @PostMapping("/verificar")
+    public ResponseEntity<String> verificarFichajes() {
+        employeeScheduleService.verificarFichajes();
+        return ResponseEntity.ok("Verificación completada");
+    }
+
+
+
 
 }

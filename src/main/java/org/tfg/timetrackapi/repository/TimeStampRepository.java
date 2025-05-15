@@ -29,6 +29,8 @@ public interface TimeStampRepository extends JpaRepository<TimeStamp, Long> {
 
     void deleteAllByEmployee_Id(Long employeeId);
 
+    boolean existsByEmployeeIdAndTimestampBetween(Long userId, LocalDateTime start, LocalDateTime end);
+
 
 
 
