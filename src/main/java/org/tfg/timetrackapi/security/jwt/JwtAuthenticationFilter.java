@@ -4,7 +4,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,9 +11,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.tfg.timetrackapi.security.service.JwtService;
-
 import java.io.IOException;
-import java.util.Collections;
+
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -43,9 +41,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt = authHeader.substring(7); // Quitar "Bearer "
         final String dni = jwtService.extractDni(jwt);
 
+
+
         if (dni != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (jwtService.validateToken(jwt, dni)) {
-                // 🔐 Cargar los detalles del usuario usando tu implementación (UserDetailsServiceImpl)
+
                 UserDetails userDetails = userDetailsService.loadUserByUsername(dni);
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

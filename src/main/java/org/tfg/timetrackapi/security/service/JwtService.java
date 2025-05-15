@@ -24,7 +24,7 @@ public class JwtService {
         claims.put("sub", dni); // estándar para subject
         claims.put("role", role); // nuevo claim con el rol
         claims.put("iat", new Date());
-
+//3600000
         long expirationTimeMs = 3600000; // 1 hora
         Date expiryDate = new Date(System.currentTimeMillis() + expirationTimeMs);
         claims.put("exp", expiryDate);
