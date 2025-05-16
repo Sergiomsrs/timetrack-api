@@ -111,8 +111,8 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
         }
     }
 
-    @Scheduled(cron = "0 0 8-20/2 * * MON-FRI", zone = "Europe/Madrid")
-    //@Scheduled(cron = "0 * * * * MON-FRI", zone = "Europe/Madrid")
+   @Scheduled(cron = "0 0 8-20/2 * * MON-FRI", zone = "Europe/Madrid")
+   // @Scheduled(cron = "0 * * * * MON-FRI", zone = "Europe/Madrid")
     @Override
     public void verificarFichajes() {
 
@@ -194,6 +194,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                     dto.setDni(schedule.getUser().getDni());
                     dto.setHora(schedule.getHora());
                     dto.setDia(schedule.getDia());
+                    dto.setDayNumber(schedule.getDia().getValue());
                     return dto;
                 })
                 .collect(Collectors.toList());

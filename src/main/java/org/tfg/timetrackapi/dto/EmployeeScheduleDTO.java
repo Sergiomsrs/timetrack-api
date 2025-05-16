@@ -9,6 +9,16 @@ public class EmployeeScheduleDTO {
     private LocalTime hora;
     private DayOfWeek dia;
 
+    private int dayNumber;
+
+    public int getDayNumber() {
+        return dayNumber;
+    }
+
+    public void setDayNumber(int dayNumber) {
+        this.dayNumber = dayNumber;
+    }
+
     public String getDni() {
         return dni;
     }
