@@ -16,6 +16,11 @@ public interface EmployeeScheduleService {
 
     List<EmployeeScheduleDTO> getSchedulesByUserId(Long userId);
 
+    List<EmployeeScheduleDTO> updateAll(List<EmployeeScheduleDTO> dtoList);
+
+    void guardarHorarioPorDefecto(String dni);
+
+
 
 
 }

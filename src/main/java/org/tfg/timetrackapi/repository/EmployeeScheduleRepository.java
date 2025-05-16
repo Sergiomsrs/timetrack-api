@@ -2,6 +2,7 @@ package org.tfg.timetrackapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.tfg.timetrackapi.entity.EmployeeSchedule;
+import org.tfg.timetrackapi.entity.User;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -12,6 +13,8 @@ public interface EmployeeScheduleRepository extends JpaRepository<EmployeeSchedu
     List<EmployeeSchedule> findByUserIdAndDia(Long userId, DayOfWeek dia);
 
     List<EmployeeSchedule> findAllByUserId(Long userId);
+
+    boolean existsByUser(User user);
 
 
 }

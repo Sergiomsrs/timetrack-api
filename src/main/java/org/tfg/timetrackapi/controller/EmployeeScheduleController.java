@@ -1,6 +1,8 @@
 package org.tfg.timetrackapi.controller;
 
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.AbsenceDTO;
@@ -44,6 +46,33 @@ public class EmployeeScheduleController {
     public List<EmployeeScheduleDTO> getSchedulesByUserId(@PathVariable Long userId) {
         return employeeScheduleService.getSchedulesByUserId(userId);
     }
+
+    @PutMapping("/horarios/all")
+    public ResponseEntity<List<EmployeeScheduleDTO>> updateAll(@RequestBody List<EmployeeScheduleDTO> dtoList) {
+        List<EmployeeScheduleDTO> updated = employeeScheduleService.updateAll(dtoList);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PostMapping("/default/{dni}")
+    public ResponseEntity<String> guardarHorarioPorDefecto(@PathVariable String dni) {
+        employeeScheduleService.guardarHorarioPorDefecto(dni);
+        return ResponseEntity.ok("Horario por defecto guardado");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        try {
+            employeeScheduleService.delete(id);
+            return ResponseEntity.ok("Registro eliminado correctamente.");
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontró ningún registro con ID: " + id);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el registro con ID: " + id);
+        }
+    }
+
 
 
 

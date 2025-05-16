@@ -17,6 +17,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -195,10 +197,83 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                     dto.setHora(schedule.getHora());
                     dto.setDia(schedule.getDia());
                     dto.setDayNumber(schedule.getDia().getValue());
+                    dto.setId(schedule.getId());
                     return dto;
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<EmployeeScheduleDTO> updateAll(List<EmployeeScheduleDTO> dtoList) {
+        List<EmployeeScheduleDTO> updatedList = new ArrayList<>();
+
+        for (EmployeeScheduleDTO dto : dtoList) {
+            if (dto.getId() == null) {
+                System.out.println("Se ignoró un DTO sin ID: " + dto);
+                continue;
+            }
+
+            Optional<EmployeeSchedule> optionalSchedule = employeeScheduleRepository.findById(dto.getId());
+
+            if (optionalSchedule.isPresent()) {
+                EmployeeSchedule schedule = optionalSchedule.get();
+
+                // Si la hora es null, simplemente la dejamos como null
+                schedule.setHora(dto.getHora());
+
+                // No se cambia ni el usuario ni el día (asumiendo que no deben cambiar)
+                employeeScheduleRepository.save(schedule);
+
+                // Devolver DTO actualizado
+                EmployeeScheduleDTO updatedDTO = new EmployeeScheduleDTO();
+                updatedDTO.setId(schedule.getId());
+                updatedDTO.setHora(schedule.getHora());
+                updatedDTO.setDia(schedule.getDia());
+                updatedDTO.setDni(schedule.getUser().getDni());
+                updatedDTO.setDayNumber(dto.getDayNumber()); // si lo necesitas en el frontend
+
+                updatedList.add(updatedDTO);
+            } else {
+                System.out.println("No se encontró el horario con ID: " + dto.getId());
+            }
+        }
+
+        return updatedList;
+    }
+
+    @Override
+    public void guardarHorarioPorDefecto(String dni) {
+        User user = userRepository.findByDni(dni)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (employeeScheduleRepository.existsByUser(user)) {
+            // Ya tiene horarios, no haces nada o lanzas excepción
+            return;
+        }
+
+        List<EmployeeSchedule> horariosPorDefecto = Arrays.asList(
+                // Turno mañana
+                new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.MONDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.TUESDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.WEDNESDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.THURSDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.FRIDAY, user),
+                new EmployeeSchedule(null, null, DayOfWeek.SATURDAY, user),
+                new EmployeeSchedule(null, null, DayOfWeek.SUNDAY, user),
+
+                // Turno tarde
+                new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.MONDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.TUESDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.WEDNESDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.THURSDAY, user),
+                new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.FRIDAY, user),
+                new EmployeeSchedule(null, null, DayOfWeek.SATURDAY, user),
+                new EmployeeSchedule(null, null, DayOfWeek.SUNDAY, user)
+        );
+
+        employeeScheduleRepository.saveAll(horariosPorDefecto);
+    }
+
 
 
 }

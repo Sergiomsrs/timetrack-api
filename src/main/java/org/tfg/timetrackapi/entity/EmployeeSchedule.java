@@ -19,7 +19,17 @@ public class EmployeeSchedule {
     @ManyToOne
     private User user;
 
-    public Long getId() {
+    public EmployeeSchedule() {
+    }
+
+    public EmployeeSchedule(Long id, LocalTime hora, DayOfWeek dia, User user) {
+        this.id = id;
+        this.hora = hora;
+        this.dia = dia;
+        this.user = user;
+    }
+
+    public long getId() {
         return id;
     }
 
