@@ -35,8 +35,6 @@ public class TimeStampServiceImpl implements TimeStampService{
 
     @Override
     public TimeStamp addTimeStamp(User user) {
-
-
         TimeStamp timeStamp = new TimeStamp();
         timeStamp.setTimestamp(LocalDateTime.now());
         timeStamp.setEmployee(user);
