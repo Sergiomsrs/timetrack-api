@@ -112,9 +112,10 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
             return null;
         }
     }
-
-   @Scheduled(cron = "0 0 8-20/2 * * MON-FRI", zone = "Europe/Madrid")
-   // @Scheduled(cron = "0 * * * * MON-FRI", zone = "Europe/Madrid")
+    /* Revisar cada dos horas*/
+   @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
+    /* Revisar cada minuto*/
+   // @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
     @Override
     public void verificarFichajes() {
 
@@ -137,7 +138,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
 
             for (EmployeeSchedule horario : horarios) {
                 // Saltar si la hora teórica aún no ha llegado
-                if (horario.getHora().isAfter(ahora)) {
+                if (horario.getHora() == null || horario.getHora().isAfter(ahora)) {
                     continue;
                 }
 
