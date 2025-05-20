@@ -1,10 +1,7 @@
 package org.tfg.timetrackapi.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -18,7 +15,8 @@ public class AbsenceNotification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     private LocalDate fecha;
 
@@ -36,12 +34,12 @@ public class AbsenceNotification {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDate getFecha() {

@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userRepository.findByDni(dni)
                 .map(user -> {
                     System.out.println("Usuario encontrado: " + user.getDni());
-                    return new CustomUserDetails(user); // En lugar de crear un User de Spring Security
+                    return new CustomUserDetails(user);
                 })
                 .orElseThrow(() -> {
                     System.out.println("Usuario no encontrado con DNI: " + dni);

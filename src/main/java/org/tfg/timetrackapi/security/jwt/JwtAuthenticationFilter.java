@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String jwt = authHeader.substring(7); // Quitar "Bearer "
+        final String jwt = authHeader.substring(7);
         final String dni = jwtService.extractDni(jwt);
 
 

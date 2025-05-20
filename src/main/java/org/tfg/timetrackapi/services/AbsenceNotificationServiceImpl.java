@@ -29,19 +29,14 @@ public class AbsenceNotificationServiceImpl implements AbsenceNotificationServic
 
         return schedules.stream().map(schedule -> {
 
-            User user = userRepository.findById(schedule.getUserId())
-                    .orElseThrow(() -> new RuntimeException("Empleado no encontrado con ID: " + schedule.getUserId()));
-
-
             AbsenceDTO dto = new AbsenceDTO();
             dto.setDia(schedule.getDia());
             dto.setFecha(schedule.getFecha());
             dto.setHora(schedule.getHora());
-            dto.setHora(schedule.getHora());
             dto.setEnviadoEn(schedule.getEnviadoEn());
-            dto.setUserId(schedule.getUserId());
-            dto.setNombre(user.getName());
-            dto.setApellido(user.getLastName());
+            dto.setUserId(schedule.getUser().getId());
+            dto.setNombre(schedule.getUser().getName());
+            dto.setApellido(schedule.getUser().getLastName());
 
             return dto;
         }).toList();

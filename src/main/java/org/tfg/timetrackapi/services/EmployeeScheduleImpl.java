@@ -171,7 +171,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
 
                         // Guardar notificación para evitar duplicados
                         AbsenceNotification notificacion = new AbsenceNotification();
-                        notificacion.setUserId(user.getId());
+                        notificacion.setUser(user);
                         notificacion.setFecha(hoy);
                         notificacion.setDia(dia);
                         notificacion.setHora(horario.getHora());

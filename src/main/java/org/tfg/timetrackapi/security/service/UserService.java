@@ -17,18 +17,18 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    // 🔹 Registrar un nuevo usuario
+    // Registrar un nuevo usuario
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword())); // Hash de la contraseña
         return userRepository.save(user);
     }
 
-    // 🔹 Buscar usuario por DNI
+    // Buscar usuario por DNI
     public Optional<User> findByDni(String dni) {
         return userRepository.findByDni(dni);
     }
 
-    // 🔹 Autenticar usuario (Comparar contraseña)
+    // Autenticar usuario (Comparar contraseña)
     public boolean authenticateUser(String dni, String rawPassword) {
         Optional<User> userOpt = userRepository.findByDni(dni);
         if (userOpt.isPresent()) {
