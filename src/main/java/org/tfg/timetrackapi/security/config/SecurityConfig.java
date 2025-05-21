@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas o accesibles sin autenticación
-                        .requestMatchers("/api/auth/login", "/api/user/me", "/api/user/{id}", "/api/timestamp/fichar", "/api/timestamp/last3","/api/horarios/user/*","/api/horarios").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/timestamp/fichar", "/api/timestamp/last3").permitAll()
 
                         // Rutas solo accesibles por administradores
                         .requestMatchers(HttpMethod.POST, "/api/user").hasRole("ADMIN")
@@ -68,8 +68,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/horarios/default/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/horarios/last10").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/horarios/user/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/user/{id}").hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET, "/api/timestamp/employee/{employeeId}/month").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/user/me").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/user/me").authenticated()
                         // Otras rutas de acceso restringido por rol ADMIN
                         .anyRequest().authenticated()  // Otras rutas requieren autenticación
 
