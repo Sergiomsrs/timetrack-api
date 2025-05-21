@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByDni(String dni);
     Page<User> findByNameContainingIgnoreCase(String name, Pageable pageable);
     // Método para obtener solo los empleados activos
-    @Query("SELECT u FROM User u WHERE u.fechaAlta <= CURRENT_DATE AND (u.fechaBaja IS NULL OR u.fechaBaja > CURRENT_DATE)")
+    @Query("SELECT u FROM User u WHERE u.fechaAlta <= CURRENT_DATE AND (u.fechaBaja IS NULL OR u.fechaBaja >= CURRENT_DATE)")
     List<User> findAllActive();
 
 

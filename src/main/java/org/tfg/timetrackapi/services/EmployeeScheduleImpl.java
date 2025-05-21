@@ -114,9 +114,9 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
     }
 
     /* Revisar cada dos horas*/
-    @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
+   // @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
     /* Revisar cada minuto*/
-    // @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
+     @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
     @Override
     public void verificarFichajes() {
 
