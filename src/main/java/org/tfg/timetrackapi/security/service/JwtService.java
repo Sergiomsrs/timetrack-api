@@ -21,10 +21,10 @@ public class JwtService {
 
     public String generateToken(String dni, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", dni); // estándar para subject
-        claims.put("role", role); // nuevo claim con el rol
+        claims.put("sub", dni);
+        claims.put("role", role);
         claims.put("iat", new Date());
-//3600000
+
         long expirationTimeMs = 3600000; // 1 hora
         Date expiryDate = new Date(System.currentTimeMillis() + expirationTimeMs);
         claims.put("exp", expiryDate);

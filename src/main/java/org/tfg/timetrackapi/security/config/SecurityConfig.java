@@ -72,8 +72,7 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.GET, "/api/timestamp/employee/{employeeId}/month").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/user/me").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/api/user/me").authenticated()
-                        // Otras rutas de acceso restringido por rol ADMIN
+
                         .anyRequest().authenticated()  // Otras rutas requieren autenticación
 
                 )

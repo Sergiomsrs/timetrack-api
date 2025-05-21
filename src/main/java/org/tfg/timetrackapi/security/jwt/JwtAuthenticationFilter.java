@@ -1,4 +1,5 @@
 package org.tfg.timetrackapi.security.jwt;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.tfg.timetrackapi.security.service.JwtService;
+
 import java.io.IOException;
 
 
@@ -40,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String jwt = authHeader.substring(7);
         final String dni = jwtService.extractDni(jwt);
-
 
 
         if (dni != null && SecurityContextHolder.getContext().getAuthentication() == null) {

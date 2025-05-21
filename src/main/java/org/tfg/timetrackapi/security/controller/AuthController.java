@@ -31,7 +31,6 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(request.getDni(), request.getPassword())
         );
 
-        // Aquí usamos CustomUserDetails para obtener el 'User'
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = customUserDetails.getUser();
 

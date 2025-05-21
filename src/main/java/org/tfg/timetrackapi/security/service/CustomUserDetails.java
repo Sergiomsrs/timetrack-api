@@ -32,7 +32,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getDni();  // o user.getEmail() si usas email
+        return user.getDni();
     }
 
     @Override public boolean isAccountNonExpired() { return true; }
