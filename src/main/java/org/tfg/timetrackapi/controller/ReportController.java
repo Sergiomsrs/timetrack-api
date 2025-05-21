@@ -31,12 +31,14 @@ public class ReportController {
     private final UserService userService;
 
     private final ReportService reportService;
+
     public ReportController(TimeStampService timeStampService, UserService userService, ReportService reportServiceImpl) {
         this.timeStampService = timeStampService;
         this.userService = userService;
         this.reportService = reportServiceImpl;
     }
-// http://localhost:8080/api/report/employee/1/report/pdf?start=2025-04-01&end=2025-04-30
+    // Endpoint indicando la fecha de inicio y fin
+    // http://localhost:8080/api/report/employee/1/report/pdf?start=2025-04-01&end=2025-04-30
     @GetMapping("/employee/{employeeId}/report/pdf")
     public void downloadPdfReport(
             @PathVariable Long employeeId,
@@ -153,7 +155,7 @@ public class ReportController {
 
         // Validación de mes
         if (month < 1 || month > 12) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Mes inválido");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Mes no valido");
             return;
         }
 
@@ -165,10 +167,9 @@ public class ReportController {
         List<DailyWorkReportDTO> report = reportService.getEmployeeMonthlyReport(employeeId, year, month);
 
         if (report.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_NO_CONTENT, "No hay registros para el mes especificado");
+            response.sendError(HttpServletResponse.SC_NO_CONTENT, "No hay registros disponibles");
             return;
         }
-
 
 
         LocalDate start = LocalDate.of(year, month, 1);
@@ -194,7 +195,7 @@ public class ReportController {
 
             document.add(new Paragraph("Informe de Jornadas Laborales", titleFont));
             document.add(new Paragraph("Empleado: " + user.getName() + " " + user.getLastName() + " " + user.getSecondLastName() + " ", subtitleFont));
-            document.add(new Paragraph("DNI: " + user.getDni() , subtitleFont));
+            document.add(new Paragraph("DNI: " + user.getDni(), subtitleFont));
             document.add(new Paragraph("Mes: " + month + "  Año: " + year, subtitleFont));
             document.add(new Paragraph("Fecha de Alta: " + user.getFechaAlta(), subtitleFont));
             document.add(Chunk.NEWLINE);
@@ -257,26 +258,23 @@ public class ReportController {
             // Leyenda
             document.add(new Paragraph("Leyenda", titleFont));
 
-// Fuentes
+            // Fuentes
             Font red = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.RED);
             Font normal = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL, BaseColor.BLACK);
 
-// Crear el párrafo para la leyenda
+            // Crear el párrafo para la leyenda
             Paragraph modLegend = new Paragraph();
             modLegend.add(new Phrase("El sufijo ", normal));
             modLegend.add(new Phrase("-MOD", red)); // Mostrar el sufijo en rojo
             modLegend.add(new Phrase(" indica que el registro ha sido modificado o creado manualmente.", normal));
 
-// Añadir la leyenda al documento
+            // Añadir la leyenda al documento
             document.add(modLegend);
             document.close();
         } catch (DocumentException e) {
             throw new IOException("Error al generar el PDF", e);
         }
     }
-
-
-
 
 
 }

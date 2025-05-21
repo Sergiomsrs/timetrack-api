@@ -34,7 +34,6 @@ public class UserController {
         this.timeStampService = timeStampService;
     }
 
-// Create
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
@@ -49,16 +48,15 @@ public class UserController {
         }
     }
 
-    // Read
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userService.findAll();
     }
 
     @GetMapping("/active")
-    public List<User> findAllActive(){
+    public List<User> findAllActive() {
         return userService.findAllActive();
     }
 
@@ -68,9 +66,6 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-
-    // Update
-
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
@@ -78,14 +73,12 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    // Delete
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         timeStampService.deleteByEmployeeId(id);
         userService.delete(id);
-        return ResponseEntity.ok("Usuario con el id " + id +  " eliminado con exito");
+        return ResponseEntity.ok("Usuario con el id " + id + " eliminado con exito");
     }
 
     @GetMapping("/pag")

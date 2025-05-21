@@ -41,9 +41,7 @@ public class TimeStampController {
         User employee = userService.getById(userId);
         TimeStamp timeStamp = timeStampService.addTimeStamp(employee);
         return ResponseEntity.ok(timeStamp);
-
     }
-
 
     @PostMapping("/fichar")
     public ResponseEntity<TimeStamp> fichar(@RequestBody FichajeRequest request) {
@@ -122,15 +120,14 @@ public class TimeStampController {
             LocalDateTime newTimestamp = LocalDateTime.parse(request.getTimestamp(), formatter);
             String isMod = request.getIsMod();
 
-
             // Llamar al servicio para crear el timestamp
             timeStampService.addTimeStampWithData(employeeId, newTimestamp, isMod);
 
-            // Añadir mensaje de éxito al mapa
+            // Añadir mensaje de éxito
             response.put("message", "Fichaje creado correctamente.");
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            // Añadir mensaje de error al mapa
+            // Añadir mensaje de error
             response.put("error", "Error al crear el fichaje: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

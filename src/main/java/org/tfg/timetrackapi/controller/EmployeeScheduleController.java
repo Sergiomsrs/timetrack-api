@@ -72,9 +72,4 @@ public class EmployeeScheduleController {
                     .body("Error al eliminar el registro con ID: " + id);
         }
     }
-
-
-
-
-
 }
