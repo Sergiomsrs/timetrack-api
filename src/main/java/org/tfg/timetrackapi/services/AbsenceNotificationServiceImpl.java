@@ -2,15 +2,11 @@ package org.tfg.timetrackapi.services;
 
 import org.springframework.stereotype.Service;
 import org.tfg.timetrackapi.dto.AbsenceDTO;
-import org.tfg.timetrackapi.dto.EmployeeScheduleDTO;
 import org.tfg.timetrackapi.entity.AbsenceNotification;
-import org.tfg.timetrackapi.entity.EmployeeSchedule;
-import org.tfg.timetrackapi.entity.User;
 import org.tfg.timetrackapi.repository.AbsenceNotificationRepository;
 import org.tfg.timetrackapi.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AbsenceNotificationServiceImpl implements AbsenceNotificationService {

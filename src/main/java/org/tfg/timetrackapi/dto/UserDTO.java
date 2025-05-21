@@ -26,31 +26,6 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String name, String lastName, String secondLastName, String dni, String password, String email) {
-        this.name = name;
-        this.lastName = lastName;
-        this.secondLastName = secondLastName;
-        this.dni = dni;
-        this.password = password;
-        this.email = email;
-    }
-
-    public UserDTO(String name, String lastName, String secondLastName, String dni, String password, String email, Role role) {
-        this.name = name;
-        this.lastName = lastName;
-        this.secondLastName = secondLastName;
-        this.dni = dni;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-    }
-
-    public UserDTO(String name, String lastName, String dni, Role role) {
-        this.name = name;
-        this.lastName = lastName;
-        this.dni = dni;
-        this.role = role;
-    }
 
     public UserDTO(Long id, String name, String lastName, String dni, Role role) {
         this.id = id;

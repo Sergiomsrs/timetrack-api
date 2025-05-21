@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas o accesibles sin autenticación
-                        .requestMatchers("/api/auth/login", "/api/user/me", "/api/user/{id}", "/api/timestamp/fichar", "/api/timestamp/last3","/api/horarios/user/*","/api/horarios/horarios/all","/api/horarios").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/user/me", "/api/user/{id}", "/api/timestamp/fichar", "/api/timestamp/last3","/api/horarios/user/*","/api/horarios").permitAll()
 
                         // Rutas solo accesibles por administradores
                         .requestMatchers(HttpMethod.POST, "/api/user").hasRole("ADMIN")
@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/timestamp/timestamp").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/timestamp/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "api/horarios/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/horarios/all").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/horarios/default/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/horarios/last10").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/horarios/user/*").hasRole("ADMIN")

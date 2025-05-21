@@ -24,8 +24,6 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
-
     @Override
     public UserDTO save(UserDTO userDTO) {
         User user = new User();
@@ -64,8 +62,6 @@ public class UserServiceImpl implements UserService {
         User userToUpdate = userRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Usuario no encontrado con ID: " + id)
         );
-
-
 
         userToUpdate.setName(userDTO.getName());
         userToUpdate.setLastName(userDTO.getLastName());

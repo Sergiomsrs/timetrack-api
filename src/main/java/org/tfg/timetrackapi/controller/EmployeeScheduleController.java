@@ -47,7 +47,7 @@ public class EmployeeScheduleController {
         return employeeScheduleService.getSchedulesByUserId(userId);
     }
 
-    @PutMapping("/horarios/all")
+    @PutMapping("/all")
     public ResponseEntity<List<EmployeeScheduleDTO>> updateAll(@RequestBody List<EmployeeScheduleDTO> dtoList) {
         List<EmployeeScheduleDTO> updated = employeeScheduleService.updateAll(dtoList);
         return ResponseEntity.ok(updated);

@@ -41,7 +41,6 @@ public class TimeStampServiceImpl implements TimeStampService{
         return timeStampRepository.save(timeStamp);
     }
 
-
     @Override
     public void addTimeStampWithData(Long employeeId, LocalDateTime newTimestamp, String isMod) {
         User user = userRepository.findById(employeeId)
@@ -59,7 +58,7 @@ public class TimeStampServiceImpl implements TimeStampService{
         String destinatario = user.getEmail();
         String asunto = "Nuevo Registro Añadido";
         String cuerpo = "Hola, un nuevo registro ha sido añadido para el dia " + newTimeStamp.getTimestamp().format(formatter) + " por tu administrador." ;
-        // Intentamos enviar el correo
+
         try {
             emailService.enviarEmail(destinatario, asunto, cuerpo);
         } catch (Exception e) {
@@ -75,19 +74,19 @@ public class TimeStampServiceImpl implements TimeStampService{
                 ));
 
         LocalDateTime last = timeStamp.getTimestamp();
-        String destinatario = timeStamp.getEmployee().getEmail(); // podrías obtenerlo del usuario
+        String destinatario = timeStamp.getEmployee().getEmail();
 
-        // Actualiza el timestamp y marca como modificado
+
         timeStamp.setTimestamp(newTimestamp);
         timeStamp.setMod("true");
         timeStampRepository.save(timeStamp);
 
-        // Datos para el correo electrónico
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy 'a las' HH:mm");
         DateTimeFormatter hFormatter = DateTimeFormatter.ofPattern("HH:mm");
         String asunto = "Registro actualizado";
         String cuerpo = "Hola, tu registro del día "+ last.format(formatter)  + " ha sido modificado a las " +  newTimestamp.format(hFormatter) + " por tu administrador." ;
-        // Intentamos enviar el correo
+
         try {
             emailService.enviarEmail(destinatario, asunto, cuerpo);
         } catch (Exception e) {
@@ -125,8 +124,6 @@ public class TimeStampServiceImpl implements TimeStampService{
                 .collect(Collectors.toList());
     }
 
-
-
     @Override
     public void deleteRecord(Long id) {
         TimeStamp timeStamp = timeStampRepository.findById(id)
@@ -137,23 +134,16 @@ public class TimeStampServiceImpl implements TimeStampService{
         LocalDateTime last = timeStamp.getTimestamp();
         String destinatario = timeStamp.getEmployee().getEmail();
 
-
-        // Datos para el correo electrónico
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy 'a las' HH:mm");
         DateTimeFormatter hFormatter = DateTimeFormatter.ofPattern("HH:mm");
         String asunto = "Registro eliminado";
         String cuerpo = "Hola, tu registro del día " + last.format(formatter) + " ha sido eliminado por tu administrador.";
-        // Intentamos enviar el correo
+
         try {
             emailService.enviarEmail(destinatario, asunto, cuerpo);
         } catch (Exception e) {
             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
         }
-
-
-
-
-
         timeStampRepository.deleteById(id);
     }
 
@@ -175,6 +165,4 @@ public class TimeStampServiceImpl implements TimeStampService{
                 ))
                 .collect(Collectors.toList());
     }
-
-
 }

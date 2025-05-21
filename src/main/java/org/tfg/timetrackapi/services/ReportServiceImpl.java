@@ -92,7 +92,7 @@ public class ReportServiceImpl implements ReportService {
 
     public List<DailyWorkReportDTO> getEmployeeMonthlyReport(Long employeeId, int year, int month) {
         LocalDate start = LocalDate.of(year, month, 1);
-        LocalDate end = start.withDayOfMonth(start.lengthOfMonth()); // último día del mes
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth()); // start.lengthOfMonth() devuelve cuantos números tiene el mes
 
         return getEmployeeMonthlyReport(employeeId, start, end);
     }

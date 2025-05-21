@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class EmployeeScheduleImpl implements EmployeeScheduleService{
+public class EmployeeScheduleImpl implements EmployeeScheduleService {
 
     private final EmployeeScheduleRepository employeeScheduleRepository;
 
@@ -112,10 +112,11 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
             return null;
         }
     }
+
     /* Revisar cada dos horas*/
-   @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
     /* Revisar cada minuto*/
-   // @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
+    // @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
     @Override
     public void verificarFichajes() {
 
@@ -159,15 +160,15 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                         String destinatario = user.getEmail();
                         String asunto = "Ausencia detectada";
                         String cuerpo = "Hola, se ha detectado una falta de fichaje a las " + horario.getHora();
-                        String cuerpo2 = "Hola, se ha detectado una falta de fichaje del empleado " + user.getName()+  " "+ user.getLastName()  + " a las " + horario.getHora();
+                        String cuerpo2 = "Hola, se ha detectado una falta de fichaje del empleado " + user.getName() + " " + user.getLastName() + " a las " + horario.getHora();
 
 
-                            try {
-                                emailService.enviarEmail(destinatario, asunto, cuerpo);
-                                emailService.enviarEmail("admin@correo.com", asunto, cuerpo2);
-                            } catch (Exception e) {
-                                System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
-                            }
+                        try {
+                            emailService.enviarEmail(destinatario, asunto, cuerpo);
+                            emailService.enviarEmail("admin@correo.com", asunto, cuerpo2);
+                        } catch (Exception e) {
+                            System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
+                        }
 
                         // Guardar notificación para evitar duplicados
                         AbsenceNotification notificacion = new AbsenceNotification();
@@ -184,9 +185,9 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                 }
 
 
-                }
             }
         }
+    }
 
     @Override
     public List<EmployeeScheduleDTO> getSchedulesByUserId(Long userId) {
@@ -219,10 +220,8 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
             if (optionalSchedule.isPresent()) {
                 EmployeeSchedule schedule = optionalSchedule.get();
 
-                // Si la hora es null, simplemente la dejamos como null
+                // Si la hora es null, se deja como null
                 schedule.setHora(dto.getHora());
-
-                // No se cambia ni el usuario ni el día (asumiendo que no deben cambiar)
                 employeeScheduleRepository.save(schedule);
 
                 // Devolver DTO actualizado
@@ -231,7 +230,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                 updatedDTO.setHora(schedule.getHora());
                 updatedDTO.setDia(schedule.getDia());
                 updatedDTO.setDni(schedule.getUser().getDni());
-                updatedDTO.setDayNumber(dto.getDayNumber()); // si lo necesitas en el frontend
+                updatedDTO.setDayNumber(dto.getDayNumber());
 
                 updatedList.add(updatedDTO);
             } else {
@@ -248,12 +247,12 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (employeeScheduleRepository.existsByUser(user)) {
-            // Ya tiene horarios, no haces nada o lanzas excepción
+            // Si ya tiene horarios no se hace nada
             return;
         }
 
         List<EmployeeSchedule> horariosPorDefecto = Arrays.asList(
-                // Turno mañana
+                // Turno generico de mañana
                 new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.MONDAY, user),
                 new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.TUESDAY, user),
                 new EmployeeSchedule(null, LocalTime.of(8, 0), DayOfWeek.WEDNESDAY, user),
@@ -262,7 +261,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
                 new EmployeeSchedule(null, null, DayOfWeek.SATURDAY, user),
                 new EmployeeSchedule(null, null, DayOfWeek.SUNDAY, user),
 
-                // Turno tarde
+                // Turno generico tarde
                 new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.MONDAY, user),
                 new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.TUESDAY, user),
                 new EmployeeSchedule(null, LocalTime.of(16, 0), DayOfWeek.WEDNESDAY, user),
@@ -274,7 +273,6 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService{
 
         employeeScheduleRepository.saveAll(horariosPorDefecto);
     }
-
 
 
 }
