@@ -19,16 +19,20 @@ public class JwtService {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
+    // Generar Token recibe dni y rol del empleado
     public String generateToken(String dni, String role) {
+        // Se crea un mapa con los campos recibidos y la fecha actual
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", dni);
         claims.put("role", role);
         claims.put("iat", new Date());
 
+        // Se define el tiempo de expiración del token, en este caso 1h desde que se creo
         long expirationTimeMs = 3600000; // 1 hora
         Date expiryDate = new Date(System.currentTimeMillis() + expirationTimeMs);
         claims.put("exp", expiryDate);
 
+        // Se retorna el token con todos los datos
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(secretKey)

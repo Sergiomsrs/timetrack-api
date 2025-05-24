@@ -1,6 +1,7 @@
 package org.tfg.timetrackapi.controller;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +29,7 @@ class UserControllerTest {
     private UserController userController;
 
     @Test
+    @DisplayName("Modificar datos usuario")
     public void testUpdateUser() {
         // Datos de entrada
         Long userId = 1L;

@@ -114,20 +114,20 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
     }
 
     /* Revisar cada dos horas*/
-   // @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
     /* Revisar cada minuto*/
-     @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
+   // @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
     @Override
     public void verificarFichajes() {
-
+        // Inicialización de variables
         LocalDate hoy = LocalDate.now();
         DayOfWeek dia = hoy.getDayOfWeek();
         LocalTime ahora = LocalTime.now();
-
         List<User> usuarios = userRepository.findAll();
 
+        // Se recorre cada usuario encontrado
         for (User user : usuarios) {
-
+            // Se descartan los que se encuentran inactivos
             if (user.getFechaAlta() != null && hoy.isBefore(user.getFechaAlta())) {
                 continue;
             }
@@ -142,26 +142,26 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
                 if (horario.getHora() == null || horario.getHora().isAfter(ahora)) {
                     continue;
                 }
-
+                // Se buscan registros en un rando de 30 minutos
                 LocalDateTime desde = LocalDateTime.of(hoy, horario.getHora().minusMinutes(30));
                 LocalDateTime hasta = LocalDateTime.of(hoy, horario.getHora().plusMinutes(30));
-
+                // Se verifica la existencia de fichaje
                 boolean fichajeHecho = timeStampRepository.existsByEmployeeIdAndTimestampBetween(
                         user.getId(), desde, hasta
                 );
-
+                // Si verifica si ya se ha notificado
                 if (!fichajeHecho) {
                     boolean notificado = absenceNotificationRepository
                             .existsByUserIdAndFechaAndHora(user.getId(), hoy, horario.getHora());
-
+                // En caso de no estar notificado
                     if (!notificado) {
-
 
                         String destinatario = user.getEmail();
                         String asunto = "Ausencia detectada";
-                        String cuerpo = "Hola, se ha detectado una falta de fichaje a las " + horario.getHora();
-                        String cuerpo2 = "Hola, se ha detectado una falta de fichaje del empleado " + user.getName() + " " + user.getLastName() + " a las " + horario.getHora();
-
+                        String cuerpo = "Hola, se ha detectado una ausencia en el registro horario de las "
+                                + horario.getHora() + " del dia " + horario.getDia();
+                        String cuerpo2 = "Hola, se ha detectado una ausencia en el registro horario de las  "
+                                + user.getName() + " " + user.getLastName() + " a las " + horario.getHora();
 
                         try {
                             emailService.enviarEmail(destinatario, asunto, cuerpo);
@@ -169,8 +169,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
                         } catch (Exception e) {
                             System.err.println("Error al enviar el correo electrónico: " + e.getMessage());
                         }
-
-                        // Guardar notificación para evitar duplicados
+                        // Guardar notificación en la base de datos para evitar duplicados
                         AbsenceNotification notificacion = new AbsenceNotification();
                         notificacion.setUser(user);
                         notificacion.setFecha(hoy);
@@ -180,11 +179,7 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
 
                         absenceNotificationRepository.save(notificacion);
                     }
-
-
                 }
-
-
             }
         }
     }

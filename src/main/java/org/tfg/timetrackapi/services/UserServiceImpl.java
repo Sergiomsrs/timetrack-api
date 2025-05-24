@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         return new UserDTO(
+
                 savedUser.getName(),
                 savedUser.getLastName(),
                 savedUser.getSecondLastName(),

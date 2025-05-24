@@ -3,7 +3,9 @@ package org.tfg.timetrackapi.controller;
 
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.*;
 import org.tfg.timetrackapi.entity.TimeStamp;
@@ -35,24 +37,25 @@ public class TimeStampController {
     }
 
 
-    @PostMapping("/add/{userId}")
+   /* @PostMapping("/add/{userId}")
     public ResponseEntity<TimeStamp> addTimeStamp(@PathVariable Long userId){
 
         User employee = userService.getById(userId);
         TimeStamp timeStamp = timeStampService.addTimeStamp(employee);
         return ResponseEntity.ok(timeStamp);
-    }
+    }*/
 
     @PostMapping("/fichar")
-    public ResponseEntity<TimeStamp> fichar(@RequestBody FichajeRequest request) {
-        // Autenticar al usuario con DNI y PIN
-        User employee = userService.authenticateUser(request.getDni(), request.getPassword());
-
-        // Guardar el fichaje
-        TimeStamp timeEntry = timeStampService.addTimeStamp(employee);
-
-        // Retornar el fichaje en la respuesta
-        return ResponseEntity.ok(timeEntry);
+    public ResponseEntity<?> fichar(@RequestBody FichajeRequest request) {
+        try {
+            User employee = userService.authenticateUser(request.getDni(), request.getPassword());
+            TimeStamp timeEntry = timeStampService.addTimeStamp(employee);
+            return ResponseEntity.ok(timeEntry);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
     }
 
     @GetMapping("/employee/{employeeId}")
@@ -138,10 +141,8 @@ public class TimeStampController {
         timeStampService.deleteRecord(id);
         return ResponseEntity.ok("Record con el id " + id +  " eliminado con exito");
     }
-
-    @GetMapping("/last3")
+    /*@GetMapping("/last3")
     public List<Last3Dto> getLastThreeTimestamps() {
         return timeStampService.getLastThreeTimestamps();
-    }
-
+    }*/
 }

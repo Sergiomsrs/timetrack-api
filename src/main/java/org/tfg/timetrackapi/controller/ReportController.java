@@ -39,7 +39,7 @@ public class ReportController {
     }
     // Endpoint indicando la fecha de inicio y fin
     // http://localhost:8080/api/report/employee/1/report/pdf?start=2025-04-01&end=2025-04-30
-    @GetMapping("/employee/{employeeId}/report/pdf")
+   /* @GetMapping("/employee/{employeeId}/report/pdf")
     public void downloadPdfReport(
             @PathVariable Long employeeId,
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NotNull LocalDate start,
@@ -138,7 +138,7 @@ public class ReportController {
         } catch (DocumentException e) {
             throw new IOException("Error al generar el PDF", e);
         }
-    }
+    }*/
 
     private String formatDuration(long ms) {
         long hours = ms / 3600000;

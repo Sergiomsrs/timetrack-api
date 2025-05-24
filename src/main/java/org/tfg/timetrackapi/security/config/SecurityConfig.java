@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas o accesibles sin autenticación
-                        .requestMatchers("/api/auth/login", "/api/timestamp/fichar", "/api/timestamp/last3","/api/user/me").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/timestamp/fichar", "/api/user/me").permitAll()
 
                         // Rutas solo accesibles por administradores
                         .requestMatchers(HttpMethod.POST, "/api/user").hasRole("ADMIN")
@@ -58,7 +58,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/user/pag").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/user/search").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/report/**").hasAnyRole("ADMIN", "GUEST")
-                        .requestMatchers(HttpMethod.POST, "/api/timestamp/add/{userId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/timestamp/employee/{employeeId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/timestamp/{timeTsId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/timestamp/timestamp").hasRole("ADMIN")

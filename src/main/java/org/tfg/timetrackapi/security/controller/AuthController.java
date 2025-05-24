@@ -25,19 +25,21 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        System.out.println("¡Petición de login recibida!");
 
+        // Autenticar al usuario
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getDni(), request.getPassword())
         );
 
+        // Se asocia el usuario autenticado a User para obtener todos sus atributos
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         User user = customUserDetails.getUser();
 
+        // Se genera el token con el dni, nombre y rol
         String token = jwtService.generateToken(user.getDni(), user.getRole().name());
 
-        System.out.println(user.getRole());
-
+        // Se devuelve la respuesta en un código 200 OK
+        // La respuesta incluye el token y el rol del usuario
         return ResponseEntity.ok(new AuthResponse(token, user.getRole()));
     }
 }

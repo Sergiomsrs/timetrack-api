@@ -35,7 +35,6 @@ public class UserController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
         try {
             UserDTO userSaved = userService.save(userDTO);
@@ -50,7 +49,6 @@ public class UserController {
 
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public List<User> findAll() {
         return userService.findAll();
     }
@@ -104,7 +102,6 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByDni(userDetails.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
