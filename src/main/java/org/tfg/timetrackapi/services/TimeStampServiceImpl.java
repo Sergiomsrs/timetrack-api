@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +36,14 @@ public class TimeStampServiceImpl implements TimeStampService{
 
     @Override
     public TimeStamp addTimeStamp(User user) {
+
+        Optional<User> activeUserOpt = userRepository.findActiveById(user.getId());
+
+        if (activeUserOpt.isEmpty()) {
+            throw new IllegalStateException("El usuario no está activo y no puede fichar.");
+        }
+
+
         TimeStamp timeStamp = new TimeStamp();
         timeStamp.setTimestamp(LocalDateTime.now());
         timeStamp.setEmployee(user);
