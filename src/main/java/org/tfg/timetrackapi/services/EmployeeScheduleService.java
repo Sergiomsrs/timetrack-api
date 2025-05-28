@@ -20,6 +20,8 @@ public interface EmployeeScheduleService {
 
     void guardarHorarioPorDefecto(String dni);
 
+    void deleteByUserId(Long userId);
+
 
 
 

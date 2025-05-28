@@ -32,6 +32,7 @@ class TimeStampControllerTest {
     @Test
     @DisplayName("Fichaje credenciales correctas")
     void successfulFicharReturnsOk() throws Exception {
+
         User mockUser = new User();
         mockUser.setId(1L);
 

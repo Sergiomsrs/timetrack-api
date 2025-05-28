@@ -1,6 +1,7 @@
 package org.tfg.timetrackapi.services;
 
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.TextStyle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -114,9 +113,17 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
     }
 
     /* Revisar cada dos horas*/
-    @Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
+   //@Scheduled(cron = "0 * * * * *", zone = "Europe/Madrid")
+    //Revisar cada 15 minutos
+
+    @PostConstruct
+    public void init() {
+        verificarFichajes();
+    }
+
+   // @Scheduled(cron = "0 */15 * * * *", zone = "Europe/Madrid")
     /* Revisar cada minuto*/
-   // @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
+    @Scheduled(cron = "0 0 */1 * * *", zone = "Europe/Madrid")
     @Override
     public void verificarFichajes() {
         // Inicialización de variables
@@ -158,10 +165,10 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
 
                         String destinatario = user.getEmail();
                         String asunto = "Ausencia detectada";
-                        String cuerpo = "Hola, se ha detectado una ausencia en el registro horario de las "
-                                + horario.getHora() + " del dia " + horario.getDia();
-                        String cuerpo2 = "Hola, se ha detectado una ausencia en el registro horario de las  "
-                                + user.getName() + " " + user.getLastName() + " a las " + horario.getHora();
+                        String cuerpo = "Hola, se ha detectado una ausencia en el registro horario de hoy "
+                                + horario.getDia().getDisplayName(TextStyle.FULL, new Locale("es", "ES")) +  ", a las " +horario.getHora()+".";
+                        String cuerpo2 = "Hola, se ha detectado una ausencia en el registro horario de "
+                                + user.getName() + " " + user.getLastName() + " hoy " + horario.getDia().getDisplayName(TextStyle.FULL, new Locale("es", "ES"))+  ", a las " + horario.getHora()+".";
 
                         try {
                             emailService.enviarEmail(destinatario, asunto, cuerpo);
@@ -267,6 +274,11 @@ public class EmployeeScheduleImpl implements EmployeeScheduleService {
         );
 
         employeeScheduleRepository.saveAll(horariosPorDefecto);
+    }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        employeeScheduleRepository.deleteByUserId(userId);
     }
 
 

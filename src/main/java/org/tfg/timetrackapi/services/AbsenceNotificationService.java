@@ -9,5 +9,7 @@ public interface AbsenceNotificationService {
 
     public List<AbsenceDTO> getLast10SchedulesDTO();
 
+    void deleteByUserId(Long id);
+
 
 }

@@ -13,9 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.tfg.timetrackapi.dto.UserDTO;
 import org.tfg.timetrackapi.entity.User;
-import org.tfg.timetrackapi.services.ReportServiceImpl;
-import org.tfg.timetrackapi.services.TimeStampService;
-import org.tfg.timetrackapi.services.UserService;
+import org.tfg.timetrackapi.services.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,9 +27,15 @@ public class UserController {
     private final UserService userService;
     private final TimeStampService timeStampService;
 
-    public UserController(UserService userService, TimeStampService timeStampService) {
+    private final AbsenceNotificationService absenceNotificationService;
+
+    private final EmployeeScheduleService employeeScheduleService;
+
+    public UserController(UserService userService, TimeStampService timeStampService, AbsenceNotificationService absenceNotificationService, EmployeeScheduleService employeeScheduleService) {
         this.userService = userService;
         this.timeStampService = timeStampService;
+        this.absenceNotificationService = absenceNotificationService;
+        this.employeeScheduleService = employeeScheduleService;
     }
 
     @PostMapping
@@ -75,6 +79,8 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         timeStampService.deleteByEmployeeId(id);
+        absenceNotificationService.deleteByUserId(id);
+        employeeScheduleService.deleteByUserId(id);
         userService.delete(id);
         return ResponseEntity.ok("Usuario con el id " + id + " eliminado con exito");
     }

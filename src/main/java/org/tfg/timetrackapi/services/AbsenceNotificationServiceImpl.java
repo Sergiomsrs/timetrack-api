@@ -37,4 +37,9 @@ public class AbsenceNotificationServiceImpl implements AbsenceNotificationServic
             return dto;
         }).toList();
     }
+
+    @Override
+    public void deleteByUserId(Long id) {
+        absenceNotificationRepository.deleteByUserId(id);
+    }
 }
