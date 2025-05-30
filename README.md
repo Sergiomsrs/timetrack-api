@@ -10,7 +10,7 @@ La aplicación permitira a los trabajadores fichar sus horas de entrada y salida
 
 - **Frontend**: React
 - **Backend**: Spring Boot
-- **Base de datos**: (por definir)
+- **Base de datos**: MySql
 
 ## Funcionalidades
 
